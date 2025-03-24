@@ -1,0 +1,77 @@
+{
+   "navigation": {
+    "tabs": {
+      "stories": "Histoires",
+      "phrases": "Phrases",
+      "settings": "Paramètres",
+      "index": "Histoires"
+    }
+  },
+  "common": {
+    "close": "Fermer",
+    "translate": "Traduire",
+    "storyDecoder": "Pourquoi c'est drôle ?"
+  },
+  "example": {
+  "firstStory": "Voici ta première histoire",
+  "play": "Écouter l’audio de l’histoire",
+  "translateStory": "Traduire toute l’histoire",
+  "translate": "Traduire une phrase",
+  "storyDecoder": "Comprendre l’histoire et la culture",
+  "phrases": "Apprendre les phrases clés",
+  "save": "Enregistrer pour réviser plus tard",
+    "try": "À toi de jouer !"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "Quelle est votre langue maternelle ?",
+      "subtitle": "Sélectionnez la langue que vous parlez couramment"
+    },
+    "targetLanguage": {
+      "title": "Quelle langue souhaitez-vous apprendre ?",
+      "subtitle": "Choisissez votre langue cible"
+    },
+    "level": {
+      "title": "Quel est votre niveau actuel ?",
+      "subtitle": "Sélectionnez votre niveau en {language}",
+      "levels": {
+        "A1": "Débutant",
+        "A2": "Élémentaire",
+        "B1": "Intermédiaire",
+        "B2": "Intermédiaire Supérieur",
+        "C1": "Avancé",
+        "C2": "Maîtrise"
+      }
+    },
+    "buttons": {
+      "continue": "Continuer",
+      "start": "Commencer l'Apprentissage"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Paramètres de Langue",
+      "app": "Paramètres de l'Application"
+    },
+    "language": {
+      "native": "Langue Maternelle",
+      "target": "Langue d'Apprentissage",
+      "select": "Sélectionner une langue",
+      "hint": "Veuillez sélectionner votre {type}"
+    },
+    "app": {
+      "reminder": {
+        "title": "Rappel Quotidien",
+        "value": "Activé - 9h00"
+      },
+      "autoplay": {
+        "title": "Lecture Automatique",
+        "value": "Désactivé"
+      },
+      "onboarding": {
+        "title": "Configuration Initiale",
+        "value": "Redémarrer la configuration"
+      }
+    }
+  }
+}

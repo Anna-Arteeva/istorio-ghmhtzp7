@@ -1,0 +1,77 @@
+{
+  "navigation": {
+    "tabs": {
+      "stories": "Historias",
+      "phrases": "Frases",
+      "settings": "Configuración",
+      "index": "Historias"
+    }
+  },
+  "common": {
+    "close": "Cerrar",
+    "translate": "Traducir",
+    "storyDecoder": "El chiste explicado"
+  },
+  "example": {
+  "firstStory": "Aquí está tu primera historia",
+  "play": "Reproducir audio de la historia",
+  "translateStory": "Traducir toda la historia",
+  "translate": "Traducir una frase",
+  "storyDecoder": "Entiende la historia y la cultura",
+  "phrases": "Aprende frases clave",
+  "save": "Guárdalo para practicar después",
+    "try": "¡Ahora te toca a ti!"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "¿Cuál es tu idioma nativo?",
+      "subtitle": "Selecciona el idioma que hablas con fluidez"
+    },
+    "targetLanguage": {
+      "title": "¿Qué idioma quieres aprender?",
+      "subtitle": "Elige tu idioma objetivo"
+    },
+    "level": {
+      "title": "¿Cuál es tu nivel actual?",
+      "subtitle": "Selecciona tu nivel en {language}",
+      "levels": {
+        "A1": "Puedo pedir café… creo.",
+        "A2": "Charlas básicas, muchas cabezadas.",
+        "B1": "Puedo hablar… pero quizá entre en pánico. ",
+        "B2": "Casi fluido… pero los que hablan rápido dan miedo.",
+        "C1": "Conversaciones profundas… ¡hasta entiendo el sarcasmo!",
+        "C2": "Básicamente nativo. Chistes incluidos."
+      }
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "start": "Empezar a Aprender"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Configuración de Idioma",
+      "app": "Configuración de la App"
+    },
+    "language": {
+      "native": "Idioma Nativo",
+      "target": "Idioma de Aprendizaje",
+      "select": "Seleccionar idioma",
+      "hint": "Por favor selecciona tu {type}"
+    },
+    "app": {
+      "reminder": {
+        "title": "Recordatorio Diario",
+        "value": "Activado - 9:00 AM"
+      },
+      "autoplay": {
+        "title": "Reproducción Automática",
+        "value": "Desactivado"
+      },
+      "onboarding": {
+        "title": "Configuración Inicial",
+        "value": "Reiniciar configuración"
+      }
+    }
+  }
+}

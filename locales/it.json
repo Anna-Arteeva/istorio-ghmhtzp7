@@ -1,0 +1,77 @@
+{
+   "navigation": {
+    "tabs": {
+      "stories": "Storie",
+      "phrases": "Frasi",
+      "settings": "Impostazioni",
+      "index": "Storie"
+    }
+  },
+  "common": {
+    "close": "Chiudi",
+    "translate": "Traduci",
+    "storyDecoder": "Il senso della battuta"
+  },
+  "example": {
+  "firstStory": "Ecco la tua prima storia",
+  "play": "Ascolta l’audio della storia",
+  "translateStory": "Traduci l’intera storia",
+  "translate": "Traduci una frase",
+  "storyDecoder": "Capisci storia e cultura",
+  "phrases": "Impara le frasi chiave",
+  "save": "Salva per ripassare dopo",
+    "try": "Ora tocca a te!"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "Qual è la tua lingua madre?",
+      "subtitle": "Seleziona la lingua che parli fluentemente"
+    },
+    "targetLanguage": {
+      "title": "Quale lingua vuoi imparare?",
+      "subtitle": "Scegli la tua lingua di studio"
+    },
+    "level": {
+      "title": "Qual è il tuo livello attuale?",
+      "subtitle": "Seleziona il tuo livello in {language}",
+      "levels": {
+        "A1": "Posso ordinare un caffè… forse.",
+        "A2": "Frasi base, molti gesti.",
+        "B1": "Parlo, ma potrei andare nel panico. ",
+        "B2": "Quasi fluente… ma i velocisti mi terrorizzano!",
+        "C1": "Discussioni profonde… capisco pure il sarcasmo!",
+        "C2": "Praticamente madrelingua. Battute incluse!"
+      }
+    },
+    "buttons": {
+      "continue": "Continua",
+      "start": "Inizia ad Imparare"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Impostazioni Lingua",
+      "app": "Impostazioni App"
+    },
+    "language": {
+      "native": "Lingua Madre",
+      "target": "Lingua di Studio",
+      "select": "Seleziona lingua",
+      "hint": "Seleziona la tua {type}"
+    },
+    "app": {
+      "reminder": {
+        "title": "Promemoria Giornaliero",
+        "value": "Attivo - 9:00"
+      },
+      "autoplay": {
+        "title": "Riproduzione Automatica",
+        "value": "Disattivato"
+      },
+      "onboarding": {
+        "title": "Configurazione Iniziale",
+        "value": "Riavvia configurazione"
+      }
+    }
+  }
+}

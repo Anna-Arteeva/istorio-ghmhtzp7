@@ -1,0 +1,77 @@
+{
+  "navigation": {
+    "tabs": {
+      "stories": "Geschichten",
+      "phrases": "Phrasen",
+      "settings": "Einstellungen",
+      "index": "Geschichten"
+    }
+  },
+  "common": {
+    "close": "Schließen",
+    "translate": "Übersetzen",
+    "storyDecoder": "Witz erklärt"
+  },
+  "example": {
+  "firstStory": "Hier ist deine erste Geschichte",
+  "play": "Geschichte abspielen",
+  "translateStory": "Gesamte Geschichte übersetzen",
+  "translate": "Satz übersetzen",
+  "storyDecoder": "Geschichte und Kultur verstehen",
+  "phrases": "Wichtige Ausdrücke lernen",
+  "save": "Zum Üben speichern",
+    "try": "Jetzt bist du dran!"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "Was ist deine Muttersprache?",
+      "subtitle": "Wähle die Sprache, die du fließend sprichst"
+    },
+    "targetLanguage": {
+      "title": "Welche Sprache möchtest du lernen?",
+      "subtitle": "Wähle deine Zielsprache"
+    },
+    "level": {
+      "title": "Was ist dein aktuelles Niveau?",
+      "subtitle": "Wähle dein Niveau in {language}",
+      "levels": {
+        "A1": "Kaffee bestellen? Vielleicht.",
+        "A2": "Einfache Gespräche, viel Nicken.",
+        "B1": "Reden? Ja. Panik? Auch ja.",
+        "B2": "Fast fließend… solange niemand zu schnell spricht.",
+        "C1": "Tiefgründige Gespräche… sogar Sarkasmus!",
+        "C2": "Quasi Muttersprachler. Wortspiele inklusive."
+      }
+    },
+    "buttons": {
+      "continue": "Weiter",
+      "start": "Jetzt Lernen"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Spracheinstellungen",
+      "app": "App-Einstellungen"
+    },
+    "language": {
+      "native": "Muttersprache",
+      "target": "Lernsprache",
+      "select": "Sprache auswählen",
+      "hint": "Bitte wähle deine {type} aus"
+    },
+    "app": {
+      "reminder": {
+        "title": "Tägliche Erinnerung",
+        "value": "An - 9:00 Uhr"
+      },
+      "autoplay": {
+        "title": "Audio Autoplay",
+        "value": "Aus"
+      },
+      "onboarding": {
+        "title": "Einführung",
+        "value": "Einführung neu starten"
+      }
+    }
+  }
+}

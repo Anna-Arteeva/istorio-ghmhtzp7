@@ -1,0 +1,77 @@
+{
+    "navigation": {
+    "tabs": {
+      "stories": "Verhalen",
+      "phrases": "Zinnen",
+      "settings": "Instellingen",
+      "index": "Verhalen"
+    }
+  },
+  "common": {
+    "close": "Sluiten",
+    "translate": "Vertalen",
+    "storyDecoder": "Grap ontrafeld"
+  },
+  "example": {
+  "firstStory": "Hier is je eerste verhaal",
+  "play": "Verhaal audio afspelen",
+  "translateStory": "Vertaal het hele verhaal",
+  "translate": "Vertaal een zin",
+  "storyDecoder": "Begrijp het verhaal en de cultuur",
+  "phrases": "Leer kernzinnen",
+  "save": "Opslaan om later te oefenen",
+    "try": "Nu ben jij aan de beurt!"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "Wat is je moedertaal?",
+      "subtitle": "Selecteer de taal die je vloeiend spreekt"
+    },
+    "targetLanguage": {
+      "title": "Welke taal wil je leren?",
+      "subtitle": "Kies je doeltaal"
+    },
+    "level": {
+      "title": "Wat is je huidige niveau?",
+      "subtitle": "Selecteer je niveau in {language}",
+      "levels": {
+        "A1": "Ik kan koffie bestellen… denk ik. ",
+        "A2": "Basisgesprekken, veel knikken.",
+        "B1": "Ik praat, maar paniek ligt op de loer. ",
+        "B2": "Bijna vloeiend… maar snelle praters zijn eng. ",
+        "C1": "Diepe gesprekken… zelfs sarcasme snap ik!",
+        "C2": "Bijna native. Woordgrappen inbegrepen! "
+      }
+    },
+    "buttons": {
+      "continue": "Doorgaan",
+      "start": "Begin met Leren"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Taalinstellingen",
+      "app": "App-instellingen"
+    },
+    "language": {
+      "native": "Moedertaal",
+      "target": "Leertaal",
+      "select": "Selecteer taal",
+      "hint": "Selecteer je {type}"
+    },
+    "app": {
+      "reminder": {
+        "title": "Dagelijkse Herinnering",
+        "value": "Aan - 9:00"
+      },
+      "autoplay": {
+        "title": "Automatisch Afspelen",
+        "value": "Uit"
+      },
+      "onboarding": {
+        "title": "Startconfiguratie",
+        "value": "Configuratie herstarten"
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "navigation": {
+    "tabs": {
+      "stories": "Histórias",
+      "phrases": "Frases",
+      "settings": "Configurações",
+      "index": "Histórias"
+    }
+  },
+  "common": {
+    "close": "Fechar",
+    "translate": "Traduzir",
+    "storyDecoder": "Por que é engraçado?"
+  },
+  "example": {
+  "firstStory": "Aqui está sua primeira história",
+  "play": "Reproduzir áudio da história",
+  "translateStory": "Traduzir toda a história",
+  "translate": "Traduzir uma frase",
+  "storyDecoder": "Entenda a história e a cultura",
+  "phrases": "Aprenda frases importantes",
+  "save": "Salvar para praticar depois",
+    "try": "Agora é a sua vez!"
+},
+  "onboarding": {
+    "nativeLanguage": {
+      "title": "Qual é a sua língua nativa?",
+      "subtitle": "Selecione o idioma que você fala fluentemente"
+    },
+    "targetLanguage": {
+      "title": "Qual idioma você quer aprender?",
+      "subtitle": "Escolha seu idioma alvo"
+    },
+    "level": {
+      "title": "Qual é o seu nível atual?",
+      "subtitle": "Selecione seu nível em {language}",
+      "levels": {
+        "A1": "Iniciante",
+        "A2": "Elementar",
+        "B1": "Intermediário",
+        "B2": "Intermediário Superior",
+        "C1": "Avançado",
+        "C2": "Domínio"
+      }
+    },
+    "buttons": {
+      "continue": "Continuar",
+      "start": "Começar a Aprender"
+    }
+  },
+  "settings": {
+    "sections": {
+      "language": "Configurações",
+      "app": "Configurações do App"
+    },
+    "language": {
+      "native": "Língua Nativa",
+      "target": "Idioma de Aprendizado",
+      "select": "Selecionar idioma",
+      "hint": "Por favor selecione seu {type}"
+    },
+    "app": {
+      "reminder": {
+        "title": "Lembrete Diário",
+        "value": "Ligado - 9:00"
+      },
+      "autoplay": {
+        "title": "Reprodução Automática",
+        "value": "Desligado"
+      },
+      "onboarding": {
+        "title": "Configuração Inicial",
+        "value": "Reiniciar configuração"
+      }
+    }
+  }
+}
