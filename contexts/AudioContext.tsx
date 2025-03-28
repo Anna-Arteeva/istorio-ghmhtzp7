@@ -18,14 +18,11 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
     try {
       if (Platform.OS === 'web') {
-        if (currentSound instanceof HTMLAudioElement) {
-          currentSound.pause();
-          currentSound.currentTime = 0;
-        }
+        (currentSound as HTMLAudioElement).pause();
+        (currentSound as HTMLAudioElement).currentTime = 0;
       } else {
         await (currentSound as Audio.Sound).stopAsync();
       }
-      setCurrentSound(null);
     } catch (error) {
       console.error('Error stopping sound:', error);
     }

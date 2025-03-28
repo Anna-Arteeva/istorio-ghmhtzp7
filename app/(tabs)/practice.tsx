@@ -73,41 +73,23 @@ export default function PracticeScreen() {
   const handleNext = useCallback(async () => {
     if (!mounted) return;
     
-    if (sound) {
-      await sound.stopAsync();
-      await sound.unloadAsync();
-      setSound(null);
-    }
-    
     if (currentIndex < phrasesWithTranslations.length - 1) {
       setCurrentIndex(currentIndex + 1);
     }
-  }, [currentIndex, sound, mounted, phrasesWithTranslations.length]);
+  }, [currentIndex, mounted, phrasesWithTranslations.length]);
 
   const handlePrevious = useCallback(async () => {
     if (!mounted) return;
 
-    if (sound) {
-      await sound.stopAsync();
-      await sound.unloadAsync();
-      setSound(null);
-    }
-
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     }
-  }, [currentIndex, sound, mounted]);
+  }, [currentIndex, mounted]);
 
   const handleClose = useCallback(async () => {
     if (!mounted) return;
-
-    if (sound) {
-      await sound.stopAsync();
-      await sound.unloadAsync();
-      setSound(null);
-    }
     router.back();
-  }, [sound, mounted, router]);
+  }, [mounted, router]);
 
   const toggleMute = useCallback(() => {
     if (!mounted) return;
@@ -161,6 +143,11 @@ export default function PracticeScreen() {
             phrase={currentPhrase}
             onSoundLoaded={setSound}
             autoPlay={!isMuted}
+            onNavigate={() => {
+              if (sound) {
+                sound.stopAsync();
+              }
+            }}
           />
         </View>
 

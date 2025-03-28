@@ -8,7 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { HelpBadge } from '@/components/HelpBadge';
 
 interface Keyword {
-  id: string;
+  keyword_id: string;
   translations_json: Record<string, string | string[]>;
   audio_json: Record<string, string>;
 }
@@ -38,19 +38,13 @@ export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }:
     if (isPhraseSaved(keywordId)) {
       await removePhrase(keywordId);
     } else {
-      await addPhrase({
-        id: keywordId,
-        targetText,
-        nativeText,
-        audioUrl,
-      });
+      await addPhrase(keywordId);
     }
   };
 
   if (!selectedKeywords.length) return null;
 
   return (
-    
     <View style={styles.container}>
       <HelpBadge
         text="Repeat key phrases"
@@ -72,15 +66,14 @@ export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }:
           const saved = isPhraseSaved(keywordId);
 
           return (
-            <Pressable
-              key={keywordId}
-              style={styles.card}
-              onPress={() => onKeywordPress(keywordId)}
-            >
-              <View style={styles.cardContent}>
+            <View key={keywordId} style={styles.card}>
+              <Pressable
+                style={styles.cardContent}
+                onPress={() => onKeywordPress(keywordId)}
+              >
                 <Text style={styles.targetText}>{targetTranslation}</Text>
                 <Text style={styles.nativeText}>{nativeTranslation}</Text>
-              </View>
+              </Pressable>
               <View style={styles.actions}>
                 {audioUrl && (
                   <AudioPlayer url={audioUrl} size={36} />
@@ -96,7 +89,7 @@ export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }:
                   )}
                 </Pressable>
               </View>
-            </Pressable>
+            </View>
           );
         })}
       </ScrollView>

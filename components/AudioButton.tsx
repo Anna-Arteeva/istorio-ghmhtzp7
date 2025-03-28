@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { Play, Pause } from 'lucide-react-native';
 import { theme } from '@/theme';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
@@ -41,7 +41,12 @@ export function AudioButton({
       onPress={play}
       disabled={isLoading}
     >
-      {isPlaying ? (
+      {isLoading ? (
+        <ActivityIndicator 
+          size={iconSize} 
+          color={variant === 'primary' ? theme.colors.white : theme.colors.gray[500]} 
+        />
+      ) : isPlaying ? (
         <Pause 
           size={iconSize} 
           color={variant === 'primary' ? theme.colors.white : theme.colors.semiWhite[800]} 
@@ -52,8 +57,6 @@ export function AudioButton({
           color={
             error
               ? theme.colors.error[500]
-              : isLoading
-              ? theme.colors.primary[50]
               : variant === 'primary'
               ? theme.colors.white
               : theme.colors.semiWhite[800]

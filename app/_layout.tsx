@@ -18,7 +18,10 @@ import { AudioProvider } from '@/contexts/AudioContext';
 import { VisitProvider } from '@/contexts/VisitContext';
 import { ViewProvider } from '@/contexts/ViewContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
-import { Audio } from 'expo-av';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -33,13 +36,11 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Configure audio
-    Audio.setAudioModeAsync({
-      playsInSilentModeIOS: true,
-      staysActiveInBackground: false,
-      shouldDuckAndroid: true,
-    });
-  }, []);
+    // Hide splash screen once fonts are loaded
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;

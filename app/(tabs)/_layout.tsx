@@ -41,6 +41,13 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
+          name="feed"
+          options={{
+            title: t('navigation.tabs.stories'),
+            tabBarIcon: ({ color, size }) => <Stories size={16} color={color} />,
+          }}
+        />
+        <Tabs.Screen
           name="phrases"
           options={{
             title: t('navigation.tabs.phrases'),

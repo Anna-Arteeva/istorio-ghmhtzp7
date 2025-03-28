@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { theme } from '@/theme';
 
 interface TranslatableSentenceProps {
@@ -16,36 +16,44 @@ export function TranslatableSentence({
   isShortStory = false,
   forceOpen = false,
 }: TranslatableSentenceProps) {
-  const [isTranslationVisible, setIsTranslationVisible] = useState(forceOpen);
-
+  const [isOpen, setIsOpen] = useState(forceOpen);
+  
+  // Update state when forceOpen prop changes
   useEffect(() => {
-    setIsTranslationVisible(forceOpen);
+    setIsOpen(forceOpen);
   }, [forceOpen]);
 
-  const toggleTranslation = () => {
-    if (!forceOpen) {
-      setIsTranslationVisible(!isTranslationVisible);
-    }
+  const handlePress = () => {
+    // Always allow toggling, regardless of forceOpen state
+    setIsOpen(!isOpen);
+  };
+
+  const renderContent = () => {
+    return (
+      <>
+        <Text style={isShortStory ? styles.shortStoryText : styles.targetText}>
+          {targetText}
+        </Text>
+        {isOpen && (
+          <View style={styles.translationContainer}>
+            <Text style={styles.nativeText}>{nativeText}</Text>
+          </View>
+        )}
+      </>
+    );
   };
 
   return (
     <View style={styles.container}>
-      <Pressable 
+      <TouchableOpacity 
         style={styles.sentenceContainer} 
-        onPress={toggleTranslation}
-        android_ripple={{ color: theme.colors.gray[100] }}
+        onPress={handlePress}
+        activeOpacity={0.7}
       >
         <View style={styles.textContainer}>
-          <Text style={isShortStory ? styles.shortStoryText : styles.targetText}>
-            {targetText}
-          </Text>
-          {isTranslationVisible && nativeText && (
-            <View style={styles.translationContainer}>
-              <Text style={styles.nativeText}>{nativeText}</Text>
-            </View>
-          )}
+          {renderContent()}
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -57,18 +65,9 @@ const styles = StyleSheet.create({
   sentenceContainer: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingVertical: 4,
-    borderRadius: theme.borderRadius.md,
     ...Platform.select({
       web: {
         cursor: 'pointer',
-        ':hover': {
-          backgroundColor: theme.colors.gray[50],
-        },
-      },
-      default: {
-        // Add touch feedback styles for mobile
-        backgroundColor: 'transparent',
       },
     }),
   },

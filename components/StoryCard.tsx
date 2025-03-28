@@ -126,7 +126,10 @@ export function StoryCard({
     setIsFlashcardVisible(true);
   };
 
-  const toggleSavePhrase = async (keywordId: string) => {
+  const toggleSavePhrase = async (keywordId: string, event: any) => {
+    // Stop event propagation to prevent triggering the parent's onPress
+    event.stopPropagation();
+    
     if (!mounted) return;
 
     if (isPhraseSaved(keywordId)) {
@@ -167,7 +170,7 @@ export function StoryCard({
           )}
           <Pressable
             style={styles.actionButton}
-            onPress={() => toggleSavePhrase(keywordId)}
+            onPress={(event) => toggleSavePhrase(keywordId, event)}
           >
             {saved ? (
               <Check size={20} color={theme.colors.gray[500]} />
