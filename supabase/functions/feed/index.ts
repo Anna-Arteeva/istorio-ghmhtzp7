@@ -7,18 +7,60 @@ import { distributeContent } from './content-distributor.ts';
 import { getAccessibleLevels } from './utils.ts';
 import type { FeedParams, Story, FeedResponse } from './types.ts';
 
-const DEFAULT_PAGE_SIZE = 10;
-
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: corsHeaders,
+      headers: {
+        ...corsHeaders,
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, accept, cache-control',
+        'Access-Control-Max-Age': '86400',
+      },
     });
   }
 
   try {
+    // Check for authorization header
+    const authHeader = req.headers.get('authorization');
+    const apiKey = req.headers.get('apikey');
+
+    if (!authHeader && !apiKey) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unauthorized', 
+          message: 'Missing authorization header',
+          details: 'Please provide either Authorization or apikey header'
+        }),
+        {
+          status: 401,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
+
+    // Validate the authorization token
+    const token = authHeader?.replace('Bearer ', '') || apiKey;
+    if (token !== Deno.env.get('ANON_KEY')) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Unauthorized',
+          message: 'Invalid authorization token'
+        }),
+        {
+          status: 401,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+    }
+
     if (req.method !== 'POST') {
       return new Response(JSON.stringify({ error: 'Method not allowed' }), {
         status: 405,
@@ -31,20 +73,17 @@ Deno.serve(async (req) => {
 
     // Get Supabase credentials from environment
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY'); // Use anon key instead of service role key
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error('Missing environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Missing environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
     }
 
-    // Initialize Supabase client with anon key
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         autoRefreshToken: false,
         persistSession: false,
-      },
-      global: {
-        headers: { 'Content-Type': 'application/json' },
       },
     });
 
@@ -64,17 +103,13 @@ Deno.serve(async (req) => {
 
     // Get accessible levels based on user's level
     const accessibleLevels = getAccessibleLevels(params.level);
-    const pageSize = params.pageSize || DEFAULT_PAGE_SIZE;
-    const page = params.page || 1;
-    const offset = (page - 1) * pageSize;
 
-    // Fetch stories with pagination
-    const { data: storiesData, error: storiesError, count } = await supabase
+    // Fetch stories
+    const { data: storiesData, error: storiesError } = await supabase
       .from('stories')
-      .select('*', { count: 'exact' })
+      .select('*')
       .eq('story_status', 'published')
-      .in('level', accessibleLevels)
-      .range(offset, offset + pageSize - 1);
+      .in('level', accessibleLevels);
 
     if (storiesError) throw storiesError;
 
@@ -99,16 +134,15 @@ Deno.serve(async (req) => {
         gradient: story.gradient,
       }));
 
-    // Fetch info cards for the current page
+    // Fetch info cards
     const { data: infoCards, error: infoCardsError } = await supabase
       .from('info_cards')
       .select('*')
-      .order('order', { ascending: true })
-      .range(offset, offset + pageSize - 1);
+      .order('order', { ascending: true });
 
     if (infoCardsError) throw infoCardsError;
 
-    // Fetch keywords for the current set of stories
+    // Fetch keywords
     const keywordIds = new Set<string>();
     filteredStories.forEach(story => {
       story.keywords?.forEach(keyword => keywordIds.add(keyword));
@@ -138,16 +172,9 @@ Deno.serve(async (req) => {
       params.firstVisit
     );
 
-    // Calculate pagination info
-    const totalItems = count || 0;
-    const hasMore = offset + pageSize < totalItems;
-    const nextPage = hasMore ? page + 1 : null;
-
     const response: FeedResponse = {
       items: distributedItems,
       keywords: keywordsMap,
-      hasMore,
-      nextPage,
     };
 
     // Return response with proper CORS headers

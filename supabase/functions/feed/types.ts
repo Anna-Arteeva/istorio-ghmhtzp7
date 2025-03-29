@@ -38,8 +38,6 @@ export interface FeedParams {
   level: string;
   viewHistory: ViewRecord[];
   firstVisit: string | null;
-  page: number;
-  pageSize?: number;
 }
 
 // Define all possible feed item types
@@ -52,6 +50,4 @@ export type FeedItemType =
 export interface FeedResponse {
   items: FeedItemType[];
   keywords: Record<string, Keyword>;
-  hasMore: boolean;
-  nextPage: number | null;
 }
