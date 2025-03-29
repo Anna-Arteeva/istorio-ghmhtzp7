@@ -10,7 +10,7 @@ import { ExplanationSheet } from '@/components/ExplanationSheet';
 
 export function ExampleStory() {
   const { t } = useTranslation();
-  const { nativeLanguage } = useLanguage();
+  const { nativeLanguage, targetLanguage } = useLanguage();
   const [story, setStory] = useState<any>(null);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
   const [mounted, setMounted] = useState(false);
@@ -46,7 +46,7 @@ export function ExampleStory() {
         level: storyData.level,
         imageUrl: storyData.image_url,
         keywords: storyData.keywords || [],
-        audioUrl: storyData.audio_json?.en || undefined,
+        audioUrl: storyData.audio_json?.[targetLanguage] || storyData.audio_json?.en,
         translations_json: storyData.translations_json,
         content_json: storyData.content_json,
         explanations_json: storyData.explanations_json,
@@ -57,7 +57,7 @@ export function ExampleStory() {
       if (formattedStory.keywords?.length) {
         const { data: keywordsData, error: keywordsError } = await supabase
           .from('keywords')
-          .select('keyword_id, translations_json, audio_json')
+          .select('keyword_id, translations_json, audio_json, word_level')
           .in('keyword_id', formattedStory.keywords);
 
         if (keywordsError) throw keywordsError;

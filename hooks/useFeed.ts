@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
+import { useVisits } from '@/contexts/VisitContext';
 import { type LanguageLevel } from '@/lib/constants';
 
 const PAGE_SIZE = 10;
@@ -153,6 +154,7 @@ function isWithinLastTwoHours(timestamp: string | null): boolean {
 export function useFeed() {
   const { targetLanguage } = useLanguage();
   const { level } = useLevel();
+  const { firstVisit, visits } = useVisits();
   const [feedItems, setFeedItems] = useState<any[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
@@ -201,7 +203,7 @@ export function useFeed() {
           level: story.level,
           imageUrl: story.image_url,
           keywords: story.keywords || [],
-          audioUrl: story.audio_json?.[targetLanguage],
+          audioUrl: story.audio_json?.[targetLanguage] || story.audio_json?.en,
           content_json: story.content_json,
           translations_json: story.translations_json,
           explanations_json: story.explanations_json,
@@ -227,7 +229,7 @@ export function useFeed() {
       if (keywordIds.size > 0) {
         const { data: keywordsData, error: keywordsError } = await supabase
           .from('keywords')
-          .select('keyword_id, translations_json, audio_json')
+          .select('keyword_id, translations_json, audio_json, word_level')
           .in('keyword_id', Array.from(keywordIds));
 
         if (keywordsError) throw keywordsError;
@@ -245,8 +247,8 @@ export function useFeed() {
         filteredStories,
         infoCards || [],
         keywordsMap,
-        [], // viewHistory - implement if needed
-        null // firstVisit - implement if needed
+        visits,
+        firstVisit
       );
 
       if (isLoadingMore) {

@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, Image, StyleSheet, Pressable, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  Platform,
+} from 'react-native';
 import { Languages, Plus, Check } from 'lucide-react-native';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useLevel } from '@/contexts/LevelContext';
 import { theme } from '@/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FaceThinkingIcon } from '@/components/CustomIcons';
@@ -17,6 +25,7 @@ interface Keyword {
   keyword_id: string;
   translations_json: Record<string, string | string[]>;
   audio_json: Record<string, string>;
+  word_level: string;
 }
 
 function getPrimaryTranslation(translation: string | string[]): string {
@@ -25,7 +34,7 @@ function getPrimaryTranslation(translation: string | string[]): string {
 
 function parseContent(content: string | undefined | null): string[] {
   if (!content || typeof content !== 'string') return [];
-  return content.split('|').map(text => text.trim());
+  return content.split('|').map((text) => text.trim());
 }
 
 export interface Story {
@@ -82,6 +91,7 @@ export function StoryCard({
   const { recordView } = useViews();
   const { t } = useTranslation();
   const { nativeLanguage, targetLanguage } = useLanguage();
+  const { level } = useLevel();
   const { addPhrase, removePhrase, isPhraseSaved } = useSavedPhrases();
   const { showTranslationsByDefault } = useSettings();
   const [selectedKeyword, setSelectedKeyword] = useState<{
@@ -91,16 +101,32 @@ export function StoryCard({
     audioUrl?: string;
   } | null>(null);
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
-  const [hideTranslations, setHideTranslations] = useState(!showTranslationsByDefault);
+  const [hideTranslations, setHideTranslations] = useState(
+    !showTranslationsByDefault
+  );
   const [mounted, setMounted] = useState(false);
 
   const targetContent = story?.content_json?.[targetLanguage];
   const nativeContent = story?.content_json?.[nativeLanguage];
 
-  const targetSentences = useMemo(() => parseContent(targetContent), [targetContent]);
-  const nativeSentences = useMemo(() => parseContent(nativeContent), [nativeContent]);
+  const targetSentences = useMemo(
+    () => parseContent(targetContent),
+    [targetContent]
+  );
+  const nativeSentences = useMemo(
+    () => parseContent(nativeContent),
+    [nativeContent]
+  );
 
   const gradientColors = useMemo(() => getRandomGradient(), [story.id]);
+
+  // Filter keywords to only show those matching user's exact level
+  const filteredKeywords = useMemo(() => {
+    return story.keywords.filter((keywordId) => {
+      const keyword = keywords[keywordId];
+      return keyword?.word_level === level;
+    });
+  }, [story.keywords, keywords, level]);
 
   useEffect(() => {
     setMounted(true);
@@ -119,8 +145,12 @@ export function StoryCard({
 
     setSelectedKeyword({
       id: keywordId,
-      targetText: getPrimaryTranslation(keyword.translations_json[targetLanguage]),
-      nativeText: getPrimaryTranslation(keyword.translations_json[nativeLanguage]),
+      targetText: getPrimaryTranslation(
+        keyword.translations_json[targetLanguage]
+      ),
+      nativeText: getPrimaryTranslation(
+        keyword.translations_json[nativeLanguage]
+      ),
       audioUrl: keyword.audio_json?.[targetLanguage],
     });
     setIsFlashcardVisible(true);
@@ -129,7 +159,7 @@ export function StoryCard({
   const toggleSavePhrase = async (keywordId: string, event: any) => {
     // Stop event propagation to prevent triggering the parent's onPress
     event.stopPropagation();
-    
+
     if (!mounted) return;
 
     if (isPhraseSaved(keywordId)) {
@@ -143,27 +173,25 @@ export function StoryCard({
     const keyword = keywords[keywordId];
     if (!keyword) return null;
 
-    const targetTranslation = getPrimaryTranslation(keyword.translations_json[targetLanguage]);
-    const nativeTranslation = getPrimaryTranslation(keyword.translations_json[nativeLanguage]);
+    const targetTranslation = getPrimaryTranslation(
+      keyword.translations_json[targetLanguage]
+    );
+    const nativeTranslation = getPrimaryTranslation(
+      keyword.translations_json[nativeLanguage]
+    );
     const audioUrl = keyword.audio_json?.[targetLanguage];
     const saved = isPhraseSaved(keywordId);
 
     return (
       <View key={index} style={styles.keyword}>
         <View style={styles.keywordTextContainer}>
-          <Text style={styles.keywordText}>
-            {targetTranslation}
-          </Text>
+          <Text style={styles.keywordText}>{targetTranslation}</Text>
           {nativeTranslation && (
-            <Text style={styles.keywordTranslation}>
-              {nativeTranslation}
-            </Text>
+            <Text style={styles.keywordTranslation}>{nativeTranslation}</Text>
           )}
         </View>
         <View style={styles.keywordActions}>
-          {audioUrl && (
-            <AudioPlayer url={audioUrl} />
-          )}
+          {audioUrl && <AudioPlayer url={audioUrl} />}
           <Pressable
             style={styles.actionButton}
             onPress={(event) => toggleSavePhrase(keywordId, event)}
@@ -184,23 +212,24 @@ export function StoryCard({
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           {!hideAudio && story.audioUrl && (
-            <AudioPlayer 
-              url={story.audioUrl} 
-              size={48} 
-              variant="primary"
-            />
+            <AudioPlayer url={story.audioUrl} size={48} variant="primary" />
           )}
         </View>
         {!hideActions && (
           <View style={styles.headerRight}>
-            <Pressable 
+            <Pressable
               style={[
                 styles.actionButton,
-                hideTranslations && styles.actionButtonActive
-              ]} 
+                hideTranslations && styles.actionButtonActive,
+              ]}
               onPress={() => setHideTranslations(!hideTranslations)}
             >
-              <Languages size={20} color={hideTranslations ? theme.colors.white : theme.colors.gray[500]} />
+              <Languages
+                size={20}
+                color={
+                  hideTranslations ? theme.colors.white : theme.colors.gray[500]
+                }
+              />
             </Pressable>
           </View>
         )}
@@ -219,18 +248,19 @@ export function StoryCard({
       </View>
 
       {!hideActions && onExplain && (
-        <Pressable 
-          style={styles.decoderButton}
-          onPress={onExplain}
-        >
+        <Pressable style={styles.decoderButton} onPress={onExplain}>
           <FaceThinkingIcon size={16} color={theme.colors.gray[500]} />
-          <Text style={styles.decoderButtonText}>{t('common.storyDecoder')}</Text>
+          <Text style={styles.decoderButtonText}>
+            {t('common.storyDecoder')}
+          </Text>
         </Pressable>
       )}
 
       {Object.keys(keywords).length > 0 && (
         <View style={styles.keywords}>
-          {story.keywords.map((keywordId, index) => renderKeyword(keywordId, index))}
+          {filteredKeywords.map((keywordId, index) =>
+            renderKeyword(keywordId, index)
+          )}
         </View>
       )}
     </View>
@@ -322,12 +352,12 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: theme.spacing.md,
+    gap: theme.spacing.lg,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
   },
   headerLeft: {
     flex: 1,
@@ -367,13 +397,10 @@ const styles = StyleSheet.create({
   actionButtonActive: {
     backgroundColor: theme.colors.gray[900],
   },
-  storyContent: {
-    marginVertical: theme.spacing.md,
-  },
+  storyContent: {},
   keywords: {
     flexDirection: 'column',
     gap: theme.spacing.xs,
-    marginTop: theme.spacing.md,
   },
   keyword: {
     flexDirection: 'row',
@@ -415,3 +442,7 @@ const styles = StyleSheet.create({
     color: theme.colors.gray[500],
   },
 });
+
+export { StoryCard };
+
+export { StoryCard };
