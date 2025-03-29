@@ -5,7 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
 import { LanguageLevelBadge } from '@/components/LanguageLevelBadge';
 import { View, Platform, SafeAreaView } from 'react-native';
-import { Stories, Phrases, Practice } from '@/components/CustomIcons';
+import { Stories, Phrases, Practice, FaceThinkingIcon } from '@/components/CustomIcons';
 
 export default function TabLayout() {
   const { t } = useTranslation();
@@ -38,6 +38,13 @@ export default function TabLayout() {
           options={{
             title: t('navigation.tabs.stories'),
             tabBarIcon: ({ color, size }) => <Stories size={16} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="feed"
+          options={{
+            title: t('navigation.tabs.feed'),
+            tabBarIcon: ({ color, size }) => <FaceThinkingIcon size={16} color={color} />,
           }}
         />
         <Tabs.Screen
