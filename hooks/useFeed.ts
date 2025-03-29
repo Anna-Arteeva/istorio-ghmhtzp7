@@ -174,13 +174,18 @@ export function useFeed() {
       const from = (currentPage - 1) * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      // Fetch stories
-      const { data: stories, error: storiesError, count } = await supabase
-        .from('stories')
-        .select('*', { count: 'exact' })
-        .eq('story_status', 'published')
-        .in('level', getAccessibleLevels(level))
-        .range(from, to);
+      // Build query
+      let query = supabase
+          .from('stories')
+          .select('*', { count: 'exact' })
+          .eq('story_status', 'published')
+          .in('level', getAccessibleLevels(level));
+      
+      // Add language filter
+      query = query.or(`language.is.null,language.eq.${targetLanguage}`);
+      
+      // Add range
+      const { data: stories, error: storiesError, count } = await query.range(from, to);
 
       if (storiesError) throw storiesError;
 
