@@ -46,19 +46,32 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
   const [mounted, setMounted] = useState(false);
   const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
-  const { play, isPlaying, isLoading, error } = useAudioPlayer(keyword?.audioUrl);
+  const { play, stop, isPlaying, isLoading, error } = useAudioPlayer(keyword?.audioUrl);
 
   useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
+    return () => {
+      setMounted(false);
+      stop(); // Stop audio when component unmounts
+    };
   }, []);
 
-  // Auto-play audio when the flashcard becomes visible
+  // Handle audio when keyword changes
   useEffect(() => {
-    if (visible && mounted && keyword?.audioUrl) {
-      play();
+    if (mounted) {
+      stop(); // Stop previous audio
+      if (visible && keyword?.audioUrl) {
+        play();
+      }
     }
-  }, [visible, mounted, keyword?.audioUrl]);
+  }, [keyword?.audioUrl, visible, mounted]);
+
+  // Handle visibility changes
+  useEffect(() => {
+    if (!visible) {
+      stop(); // Stop audio when modal closes
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (visible && mounted && keyword?.id) {

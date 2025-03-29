@@ -149,11 +149,7 @@ export function StoryCard({
     const saved = isPhraseSaved(keywordId);
 
     return (
-      <Pressable
-        key={index}
-        style={styles.keyword}
-        onPress={() => handleKeywordPress(keywordId)}
-      >
+      <View key={index} style={styles.keyword}>
         <View style={styles.keywordTextContainer}>
           <Text style={styles.keywordText}>
             {targetTranslation}
@@ -179,7 +175,7 @@ export function StoryCard({
             )}
           </Pressable>
         </View>
-      </Pressable>
+      </View>
     );
   };
 

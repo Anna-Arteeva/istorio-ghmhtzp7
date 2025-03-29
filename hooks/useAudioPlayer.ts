@@ -59,6 +59,27 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
     };
   }, [url]);
 
+  const stop = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        if (webAudio) {
+          webAudio.pause();
+          webAudio.currentTime = 0;
+          updatePlaybackState(false);
+        }
+      } else {
+        if (sound) {
+          await sound.stopAsync();
+          updatePlaybackState(false);
+        }
+      }
+      setCurrentSound(null);
+    } catch (error) {
+      console.error('Stop error:', error);
+      setError('Failed to stop audio');
+    }
+  };
+
   const updatePlaybackState = (playing: boolean) => {
     setIsPlaying(playing);
     options.onPlaybackStateChange?.(playing);
@@ -210,6 +231,7 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
 
   return {
     play,
+    stop,
     isPlaying,
     isLoading,
     error,
