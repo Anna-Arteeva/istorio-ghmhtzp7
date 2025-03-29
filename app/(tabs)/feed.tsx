@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, useWindowDimensions, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, useWindowDimensions, Platform } from 'react-native';
 import { StoryCard } from '@/components/StoryCard';
 import { InfoCard } from '@/components/InfoCard';
 import { HelpBadge } from '@/components/HelpBadge';
@@ -10,11 +10,14 @@ import { useViews } from '@/contexts/ViewContext';
 import { theme } from '@/theme';
 import { ExplanationSheet } from '@/components/ExplanationSheet';
 import { KeywordsCarousel } from '@/components/KeywordsCarousel';
+import { supabase } from '@/lib/supabase';
 
 interface FeedItem {
   type: 'story' | 'info_card' | 'try_badge' | 'keywords_carousel';
   data?: any;
 }
+
+const PAGE_SIZE = 10;
 
 export default function FeedScreen() {
   const { targetLanguage, nativeLanguage } = useLanguage();
@@ -23,6 +26,7 @@ export default function FeedScreen() {
   const { viewHistory } = useViews();
   const { width } = useWindowDimensions();
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
@@ -35,6 +39,8 @@ export default function FeedScreen() {
     audioUrl?: string;
   } | null>(null);
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const numColumns = useMemo(() => {
     if (Platform.OS !== 'web') return 1;
@@ -47,42 +53,78 @@ export default function FeedScreen() {
     loadContent();
   }, [targetLanguage, level, firstVisit]);
 
-  async function loadContent() {
+  async function loadContent(isLoadingMore = false) {
     try {
-      setLoading(true);
-      setError(null);
+      if (!isLoadingMore) {
+        setLoading(true);
+        setError(null);
+      } else {
+        setLoadingMore(true);
+      }
 
       const apiUrl = `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/feed`;
+
+      // Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      // Prepare headers
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      // Only add Authorization header if we have a session
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           targetLanguage,
           level,
           viewHistory,
           firstVisit,
+          page: isLoadingMore ? page + 1 : 1,
+          pageSize: PAGE_SIZE,
         }),
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
 
       const data = await response.json();
       if (!data) throw new Error('No data received from feed');
       
-      setFeedItems(data.items || []);
+      if (isLoadingMore) {
+        setFeedItems(prev => [...prev, ...(data.items || [])]);
+        setPage(prev => prev + 1);
+      } else {
+        setFeedItems(data.items || []);
+        setPage(1);
+      }
+
       setKeywords(data.keywords || {});
+      setHasMore(data.hasMore || false);
     } catch (error) {
       console.error('Error loading content:', error);
       setError(error instanceof Error ? error.message : 'Failed to load content');
     } finally {
-      setLoading(false);
+      if (isLoadingMore) {
+        setLoadingMore(false);
+      } else {
+        setLoading(false);
+      }
     }
   }
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      loadContent(true);
+    }
+  };
 
   const handleExplainPress = (storyId: string) => {
     const story = feedItems.find(
@@ -144,6 +186,16 @@ export default function FeedScreen() {
     }
   };
 
+  const renderFooter = () => {
+    if (!loadingMore) return null;
+
+    return (
+      <View style={styles.loadingMore}>
+        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+      </View>
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -173,6 +225,9 @@ export default function FeedScreen() {
           return item.data?.id || `item-${index}`;
         }}
         contentContainerStyle={styles.list}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
       />
       
       <ExplanationSheet
@@ -210,5 +265,9 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: theme.spacing.md,
+  },
+  loadingMore: {
+    paddingVertical: theme.spacing.lg,
+    alignItems: 'center',
   },
 });

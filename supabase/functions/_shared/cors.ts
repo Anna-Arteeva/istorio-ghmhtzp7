@@ -5,4 +5,5 @@ export const corsHeaders = {
   'Access-Control-Max-Age': '86400',
   'Access-Control-Allow-Credentials': 'false',
   'Vary': 'Origin',
+  'Content-Type': 'application/json'
 };

@@ -7,17 +7,14 @@ import { distributeContent } from './content-distributor.ts';
 import { getAccessibleLevels } from './utils.ts';
 import type { FeedParams, Story, FeedResponse } from './types.ts';
 
+const DEFAULT_PAGE_SIZE = 10;
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: {
-        ...corsHeaders,
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, accept',
-        'Access-Control-Max-Age': '86400',
-      },
+      headers: corsHeaders,
     });
   }
 
@@ -34,17 +31,20 @@ Deno.serve(async (req) => {
 
     // Get Supabase credentials from environment
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY'); // Use anon key instead of service role key
 
-    if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Missing environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
     }
 
-    // Initialize Supabase client
-    const supabase = createClient(supabaseUrl, supabaseKey, {
+    // Initialize Supabase client with anon key
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         autoRefreshToken: false,
         persistSession: false,
+      },
+      global: {
+        headers: { 'Content-Type': 'application/json' },
       },
     });
 
@@ -64,13 +64,17 @@ Deno.serve(async (req) => {
 
     // Get accessible levels based on user's level
     const accessibleLevels = getAccessibleLevels(params.level);
+    const pageSize = params.pageSize || DEFAULT_PAGE_SIZE;
+    const page = params.page || 1;
+    const offset = (page - 1) * pageSize;
 
-    // Fetch stories
-    const { data: storiesData, error: storiesError } = await supabase
+    // Fetch stories with pagination
+    const { data: storiesData, error: storiesError, count } = await supabase
       .from('stories')
-      .select('*')
+      .select('*', { count: 'exact' })
       .eq('story_status', 'published')
-      .in('level', accessibleLevels);
+      .in('level', accessibleLevels)
+      .range(offset, offset + pageSize - 1);
 
     if (storiesError) throw storiesError;
 
@@ -95,15 +99,16 @@ Deno.serve(async (req) => {
         gradient: story.gradient,
       }));
 
-    // Fetch info cards
+    // Fetch info cards for the current page
     const { data: infoCards, error: infoCardsError } = await supabase
       .from('info_cards')
       .select('*')
-      .order('order', { ascending: true });
+      .order('order', { ascending: true })
+      .range(offset, offset + pageSize - 1);
 
     if (infoCardsError) throw infoCardsError;
 
-    // Fetch keywords
+    // Fetch keywords for the current set of stories
     const keywordIds = new Set<string>();
     filteredStories.forEach(story => {
       story.keywords?.forEach(keyword => keywordIds.add(keyword));
@@ -133,9 +138,16 @@ Deno.serve(async (req) => {
       params.firstVisit
     );
 
+    // Calculate pagination info
+    const totalItems = count || 0;
+    const hasMore = offset + pageSize < totalItems;
+    const nextPage = hasMore ? page + 1 : null;
+
     const response: FeedResponse = {
       items: distributedItems,
       keywords: keywordsMap,
+      hasMore,
+      nextPage,
     };
 
     // Return response with proper CORS headers
