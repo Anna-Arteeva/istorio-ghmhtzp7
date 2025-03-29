@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator, useWindowDimensions, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, useWindowDimensions, Platform, ScrollView, Pressable } from 'react-native';
 import { StoryCard, type Story } from '@/components/StoryCard';
 import { InfoCard } from '@/components/InfoCard';
-import { HelpBadge } from '@/components/HelpBadge';
+import { HelpBadge } from '@/components/HelpBadge'; 
 import { theme } from '@/theme';
 import { ExplanationSheet } from '@/components/ExplanationSheet';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -43,6 +43,12 @@ export default function StoriesScreen() {
   } | null>(null);
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
   const { feedItems, keywords, loading, loadingMore, error, hasMore, loadMore } = useFeed();
+
+  const handleLoadMore = () => {
+    if (hasMore && !loadingMore) {
+      loadMore();
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -208,6 +214,18 @@ export default function StoriesScreen() {
             </View>
           ))}
         </View>
+        {hasMore && (
+          <Pressable 
+            style={styles.loadMoreButton}
+            onPress={handleLoadMore}
+          >
+            {loadingMore ? (
+              <ActivityIndicator color={theme.colors.white} />
+            ) : (
+              <Text style={styles.loadMoreText}>Show more stories</Text>
+            )}
+          </Pressable>
+        )}
       </ScrollView>
     );
   };
@@ -256,5 +274,20 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
+  },
+  loadMoreButton: {
+    backgroundColor: theme.colors.primary[500],
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    alignSelf: 'center',
+    marginVertical: theme.spacing.xl,
+    minWidth: 200,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadMoreText: {
+    ...theme.typography.bodyBold,
+    color: theme.colors.white,
   },
 });
