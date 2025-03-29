@@ -212,7 +212,6 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
     play,
     isPlaying,
     isLoading,
-    error, 
-    cleanup,
+    error,
   };
 }

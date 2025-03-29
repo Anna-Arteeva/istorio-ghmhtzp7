@@ -46,7 +46,7 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
   const [mounted, setMounted] = useState(false);
   const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
-  const { play, isPlaying, isLoading, error, cleanup } = useAudioPlayer(keyword?.audioUrl);
+  const { play, isPlaying, isLoading, error } = useAudioPlayer(keyword?.audioUrl);
 
   useEffect(() => {
     setMounted(true);
@@ -55,16 +55,10 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
 
   // Auto-play audio when the flashcard becomes visible
   useEffect(() => {
-    if (!visible) {
-      cleanup();
-    } else if (visible && mounted && keyword?.audioUrl) {
+    if (visible && mounted && keyword?.audioUrl) {
       play();
     }
-    
-    return () => {
-      cleanup();
-    };
-  }, [visible, mounted, keyword?.audioUrl, cleanup]);
+  }, [visible, mounted, keyword?.audioUrl]);
 
   useEffect(() => {
     if (visible && mounted && keyword?.id) {
