@@ -4,8 +4,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
 import { LanguageLevelBadge } from '@/components/LanguageLevelBadge';
-import { View, Platform, SafeAreaView } from 'react-native';
-import { Stories, Phrases, Practice, FaceThinkingIcon } from '@/components/CustomIcons';
+import { View, Platform, SafeAreaView, Text } from 'react-native';
+import { Stories, Phrases, Practice } from '@/components/CustomIcons';
 
 export default function TabLayout() {
   const { t } = useTranslation();
@@ -25,26 +25,22 @@ export default function TabLayout() {
           },
           tabBarActiveTintColor: theme.colors.primary[500],
           tabBarInactiveTintColor: theme.colors.gray[500],
-          header: ({ route }) => (
-            <LanguageLevelBadge 
-              language={targetLanguage} 
-              level={level}
-              title={t(`navigation.tabs.${route.name}`)}
-            />
-          ),
+          header: ({ route }) => {
+            const title = t(`navigation.tabs.${route.name}`) || '';
+            return title ? (
+              <LanguageLevelBadge 
+                language={targetLanguage} 
+                level={level}
+                title={title}
+              />
+            ) : null;
+          },
         }}>
         <Tabs.Screen
           name="index"
           options={{
             title: t('navigation.tabs.stories'),
             tabBarIcon: ({ color, size }) => <Stories size={16} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="feed"
-          options={{
-            title: t('navigation.tabs.feed'),
-            tabBarIcon: ({ color, size }) => <FaceThinkingIcon size={16} color={color} />,
           }}
         />
         <Tabs.Screen
