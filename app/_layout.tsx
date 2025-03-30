@@ -18,10 +18,25 @@ import { AudioProvider } from '@/contexts/AudioContext';
 import { VisitProvider } from '@/contexts/VisitContext';
 import { ViewProvider } from '@/contexts/ViewContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
+import { useSettings } from '@/contexts/SettingsContext';
 import * as SplashScreen from 'expo-splash-screen';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+function AppContent() {
+  const { currentTheme } = useSettings();
+  
+  return (
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+      <StatusBar style={currentTheme === 'dark' ? 'light' : 'dark'} />
+    </>
+  );
+}
 
 export default function RootLayout() {
   useFrameworkReady();
@@ -54,11 +69,7 @@ export default function RootLayout() {
             <VisitProvider>
               <ViewProvider>
                 <SettingsProvider>
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="index" options={{ headerShown: false }} />
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                  </Stack>
-                  <StatusBar style="auto" />
+                  <AppContent />
                 </SettingsProvider>
               </ViewProvider>
             </VisitProvider>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, Modal, Platform, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ChevronLeft, ChevronRight, X, Volume2, VolumeX } from 'lucide-react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { PracticeCard } from '@/components/PracticeCard';
 import { Audio } from 'expo-av';
@@ -21,6 +21,7 @@ function getPrimaryTranslation(translation: string | string[]): string {
 }
 
 export default function PracticeScreen() {
+  const currentTheme = useTheme();
   const router = useRouter();
   const { savedPhrases } = useSavedPhrases();
   const { targetLanguage, nativeLanguage } = useLanguage();
@@ -98,14 +99,14 @@ export default function PracticeScreen() {
 
   if (!phrasesWithTranslations.length) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
         <View style={styles.header}>
-          <Pressable style={styles.closeButton} onPress={handleClose}>
-            <X size={24} color={theme.colors.gray[900]} />
+          <Pressable style={[styles.closeButton, { backgroundColor: currentTheme.colors.gray[50] }]} onPress={handleClose}>
+            <X size={24} color={currentTheme.colors.gray[900]} />
           </Pressable>
         </View>
         <View style={styles.emptyState}>
-          <Text style={styles.emptyStateText}>
+          <Text style={[styles.emptyStateText, { color: currentTheme.colors.gray[500] }]}>
             No saved phrases to practice.{'\n'}Add some phrases from stories first!
           </Text>
         </View>
@@ -116,25 +117,31 @@ export default function PracticeScreen() {
   const currentPhrase = phrasesWithTranslations[currentIndex];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
       <View style={styles.contentWrapper}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Pressable style={styles.muteButton} onPress={toggleMute}>
+            <Pressable 
+              style={[styles.muteButton, { backgroundColor: currentTheme.colors.gray[50] }]} 
+              onPress={toggleMute}
+            >
               {isMuted ? (
-                <VolumeX size={24} color={theme.colors.gray[900]} />
+                <VolumeX size={24} color={currentTheme.colors.gray[900]} />
               ) : (
-                <Volume2 size={24} color={theme.colors.gray[900]} />
+                <Volume2 size={24} color={currentTheme.colors.gray[900]} />
               )}
             </Pressable>
           </View>
-          <View style={styles.progress}>
-            <Text style={styles.progressText}>
+          <View style={[styles.progress, { backgroundColor: currentTheme.colors.gray[50] }]}>
+            <Text style={[styles.progressText, { color: currentTheme.colors.gray[500] }]}>
               {currentIndex + 1} of {phrasesWithTranslations.length}
             </Text>
           </View>
-          <Pressable style={styles.closeButton} onPress={handleClose}>
-            <X size={24} color={theme.colors.gray[900]} />
+          <Pressable 
+            style={[styles.closeButton, { backgroundColor: currentTheme.colors.gray[50] }]} 
+            onPress={handleClose}
+          >
+            <X size={24} color={currentTheme.colors.gray[900]} />
           </Pressable>
         </View>
 
@@ -153,18 +160,23 @@ export default function PracticeScreen() {
 
         <View style={styles.navigation}>
           <Pressable
-            style={[styles.navButton, currentIndex === 0 && styles.navButtonDisabled]}
+            style={[
+              styles.navButton,
+              { backgroundColor: currentTheme.colors.gray[50] },
+              currentIndex === 0 && styles.navButtonDisabled
+            ]}
             onPress={handlePrevious}
             disabled={currentIndex === 0}
           >
             <ChevronLeft
               size={24}
-              color={currentIndex === 0 ? theme.colors.gray[300] : theme.colors.gray[900]}
+              color={currentIndex === 0 ? currentTheme.colors.gray[300] : currentTheme.colors.gray[900]}
             />
           </Pressable>
           <Pressable
             style={[
               styles.navButton,
+              { backgroundColor: currentTheme.colors.gray[50] },
               currentIndex === phrasesWithTranslations.length - 1 && styles.navButtonDisabled,
             ]}
             onPress={handleNext}
@@ -174,8 +186,8 @@ export default function PracticeScreen() {
               size={24}
               color={
                 currentIndex === phrasesWithTranslations.length - 1
-                  ? theme.colors.gray[300]
-                  : theme.colors.gray[900]
+                  ? currentTheme.colors.gray[300]
+                  : currentTheme.colors.gray[900]
               }
             />
           </Pressable>
@@ -188,7 +200,6 @@ export default function PracticeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.pageBackground,
   },
   contentWrapper: {
     flex: 1,
@@ -215,25 +226,21 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.gray[50],
     justifyContent: 'center',
     alignItems: 'center',
   },
   progress: {
-    backgroundColor: theme.colors.gray[50],
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
   },
   progressText: {
     ...theme.typography.caption,
-    color: theme.colors.gray[500],
   },
   closeButton: {
     width: 40,
     height: 40,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.gray[50],
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -249,10 +256,9 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
   },
   navButton: {
-    flex: 1,
+    width: 48,
     height: 48,
-    backgroundColor: theme.colors.gray[50],
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.lg,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -267,7 +273,6 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     ...theme.typography.body1,
-    color: theme.colors.gray[500],
     textAlign: 'center',
   },
 });

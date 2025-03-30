@@ -40,6 +40,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       }
       
       if (themeValue !== null) {
+        console.log('Loaded theme preference:', themeValue);
         setThemePreferenceState(themeValue as ThemePreference);
       }
     } catch (error) {
@@ -58,6 +59,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   async function setThemePreference(value: ThemePreference) {
     try {
+      console.log('Setting theme preference to:', value);
       await AsyncStorage.setItem(STORAGE_KEYS.THEME_PREFERENCE, value);
       setThemePreferenceState(value);
     } catch (error) {
@@ -69,6 +71,12 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const currentTheme = themePreference === 'system' 
     ? (systemColorScheme || 'light')
     : themePreference;
+
+  console.log('Theme debug:', { 
+    systemColorScheme, 
+    themePreference, 
+    currentTheme 
+  });
 
   return (
     <SettingsContext.Provider

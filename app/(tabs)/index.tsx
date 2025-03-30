@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator, useWindowDimension
 import { StoryCard, type Story } from '@/components/StoryCard';
 import { InfoCard } from '@/components/InfoCard';
 import { HelpBadge } from '@/components/HelpBadge'; 
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { KeywordsCarousel } from '@/components/KeywordsCarousel';
 import { useFeed } from '@/hooks/useFeed';
@@ -25,6 +25,7 @@ function getPrimaryTranslation(translation: string | string[]): string {
 }
 
 export default function StoriesScreen() {
+  const currentTheme = useTheme();
   const { t } = useTranslation();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const { visits } = useVisits();
@@ -75,8 +76,8 @@ export default function StoriesScreen() {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+      <View style={[styles.loadingContainer, { backgroundColor: currentTheme.colors.pageBackground }]}>
+        <ActivityIndicator size="large" color={currentTheme.colors.primary[500]} />
       </View>
     );
   }
@@ -140,7 +141,7 @@ export default function StoriesScreen() {
             ListFooterComponent={() => (
               loadingMore ? (
                 <View style={styles.loadingMore}>
-                  <ActivityIndicator size="large" color={theme.colors.primary[500]} />
+                  <ActivityIndicator size="large" color={currentTheme.colors.primary[500]} />
                 </View>
               ) : null
             )}
@@ -150,7 +151,7 @@ export default function StoriesScreen() {
     }
 
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]} contentContainerStyle={styles.scrollContent}>
         <View style={[styles.masonryContainer, { gap: 16 }]}>
           {columnData.data.map((column, columnIndex) => (
             <View key={`column-${columnIndex}`} style={[styles.column, { flex: 1 }]}>
@@ -205,13 +206,13 @@ export default function StoriesScreen() {
         </View>
         {hasMore && (
           <Pressable 
-            style={styles.loadMoreButton}
+            style={[styles.loadMoreButton, { backgroundColor: currentTheme.colors.primary[500] }]}
             onPress={handleLoadMore}
           >
             {loadingMore ? (
-              <ActivityIndicator color={theme.colors.white} />
+              <ActivityIndicator color={currentTheme.colors.white} />
             ) : (
-              <Text style={styles.loadMoreText}>Show more stories</Text>
+              <Text style={[styles.loadMoreText, { color: currentTheme.colors.white }]}>Show more stories</Text>
             )}
           </Pressable>
         )}
@@ -220,7 +221,7 @@ export default function StoriesScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
       {renderContent()}
     </View>
   );
@@ -229,7 +230,6 @@ export default function StoriesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.pageBackground,
   },
   scrollContent: {
     flexGrow: 1,
@@ -238,7 +238,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.pageBackground,
     gap: theme.spacing.md,
   },
   loadingMore: {
@@ -268,10 +267,8 @@ const styles = StyleSheet.create({
     marginVertical: theme.spacing.xl,
     minWidth: 200,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   loadMoreText: {
     ...theme.typography.bodyBold,
-    color: theme.colors.white,
   },
 });

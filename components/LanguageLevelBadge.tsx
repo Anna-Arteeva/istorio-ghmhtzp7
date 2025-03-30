@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import * as Icons from '@/components/CustomIcons';
 import { LANGUAGE_LEVELS, type LanguageLevel } from '@/lib/constants';
 
@@ -15,20 +15,23 @@ export function LanguageLevelBadge({
   level,
   title,
 }: LanguageLevelBadgeProps) {
+  const currentTheme = useTheme();
   const router = useRouter();
   const IconComponent = (Icons as any)[language.toLowerCase()];
   const levelConfig = LANGUAGE_LEVELS[level];
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { backgroundColor: currentTheme.colors.pageBackground }]}>
       <Pressable style={styles.badge} onPress={() => router.push('/settings')}>
-        <View style={styles.badgeContent}>
+        <View style={[styles.badgeContent, { backgroundColor: currentTheme.colors.gray[100] }]}>
           {IconComponent && (
             <View style={styles.iconContainer}>
-              <IconComponent size={16} color={theme.colors.gray[800]} />
+              <IconComponent size={16} color={currentTheme.colors.gray[800]} />
             </View>
           )}
-          <Text style={styles.language}>{language.toUpperCase()}</Text>
+          <Text style={[styles.language, { color: currentTheme.colors.gray[800] }]}>
+            {language.toUpperCase()}
+          </Text>
           <View
             style={[
               styles.levelBadge,
@@ -44,7 +47,9 @@ export function LanguageLevelBadge({
           </View>
         </View>
       </Pressable>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, { color: currentTheme.colors.gray[900] }]}>
+        {title}
+      </Text>
     </View>
   );
 }
@@ -54,7 +59,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: theme.colors.pageBackground,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -78,7 +82,6 @@ const styles = StyleSheet.create({
   language: {
     ...theme.typography.caption,
     fontFamily: 'Montserrat-SemiBold',
-    color: theme.colors.gray[800],
   },
   levelBadge: {
     paddingHorizontal: 8,
@@ -92,7 +95,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.heading1,
-    color: theme.colors.gray[900],
     flex: 1,
   },
 });

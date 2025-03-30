@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { theme } from '@/theme';
-import { useLevel } from '@/contexts/LevelContext';
-import { type LanguageLevel } from '@/lib/constants';
 
 interface TranslatableSentenceProps {
   targetText: string;
@@ -10,23 +8,21 @@ interface TranslatableSentenceProps {
   showTranslateText?: boolean;
   isShortStory?: boolean;
   forceOpen?: boolean;
+  isInfoCard?: boolean;
   customStyles?: {
     target?: any[];
     native?: any[];
   };
 }
 
-const ADVANCED_LEVELS: LanguageLevel[] = ['B2', 'C1', 'C2'];
-
 export function TranslatableSentence({
   targetText,
   nativeText,
   isShortStory = false,
   forceOpen = false,
+  isInfoCard = false,
   customStyles
 }: TranslatableSentenceProps) {
-  const { level } = useLevel();
-  const isAdvancedLevel = ADVANCED_LEVELS.includes(level);
   const [isOpen, setIsOpen] = useState(true);
   
   // Update state when forceOpen prop changes
@@ -43,8 +39,9 @@ export function TranslatableSentence({
   };
 
   const renderContent = () => {
-    const primaryText = isAdvancedLevel ? targetText : nativeText;
-    const secondaryText = isAdvancedLevel ? nativeText : targetText;
+    // For info cards, use level-based language swapping
+    const primaryText = targetText;
+    const secondaryText = nativeText;
 
     return (
       <>

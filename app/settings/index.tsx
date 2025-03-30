@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { SettingsItem } from '@/components/SettingsItem';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 export default function SettingsScreen() {
   const router = useRouter();
   const { t } = useTranslation();
+  const currentTheme = useTheme();
   const { nativeLanguage, targetLanguage, resetOnboarding } = useLanguage();
   const { level } = useLevel();
   const { firstVisit } = useVisits();
@@ -78,23 +79,30 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('settings.sections.language')}</Text>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.white }]}>
+      <View style={[styles.header, { backgroundColor: currentTheme.colors.white }]}>
+        <Text style={[styles.title, { color: currentTheme.colors.gray[900] }]}>
+          {t('settings.sections.language')}
+        </Text>
         <View style={styles.headerActions}>
           {hasChanges && (
             <Pressable 
-              style={styles.applyButton}
+              style={[styles.applyButton, { backgroundColor: currentTheme.colors.primary[500] }]}
               onPress={handleApply}
             >
-              <Text style={styles.applyButtonText}>Apply</Text>
+              <Text style={[styles.applyButtonText, { color: currentTheme.colors.white }]}>
+                Apply
+              </Text>
             </Pressable>
           )}
           <CloseButton onPress={() => router.back()} />
         </View>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { 
+        backgroundColor: currentTheme.colors.white,
+        borderColor: currentTheme.colors.gray[200],
+      }]}>
         <SettingsItem
           label={t('settings.language.native')}
           value={nativeLanguage.toUpperCase()}
@@ -114,7 +122,10 @@ export default function SettingsScreen() {
         />
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { 
+        backgroundColor: currentTheme.colors.white,
+        borderColor: currentTheme.colors.gray[200],
+      }]}>
         <SettingsItem
           label={t('settings.app.theme.title')}
           value={getThemeLabel(themePreference)}
@@ -138,7 +149,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
   },
   header: {
     flexDirection: 'row',
@@ -147,7 +157,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     paddingTop: Platform.OS === 'ios' ? 48 : 24,
     paddingBottom: 16,
-    backgroundColor: theme.colors.white,
   },
   headerActions: {
     flexDirection: 'row',
@@ -156,23 +165,18 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.heading1,
-    color: theme.colors.gray[900],
   },
   section: {
     marginTop: 16,
-    backgroundColor: theme.colors.white,
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    borderColor: theme.colors.gray[200],
   },
   applyButton: {
-    backgroundColor: theme.colors.primary[500],
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.md,
   },
   applyButtonText: {
     ...theme.typography.bodyBold,
-    color: theme.colors.white,
   },
 });

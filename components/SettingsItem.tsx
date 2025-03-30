@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import * as Icons from '@/components/CustomIcons';
 
 interface SettingsItemProps {
@@ -23,34 +23,52 @@ export function SettingsItem({
   description,
 }: SettingsItemProps) {
   const IconComponent = icon ? (Icons as any)[icon] : null;
+  const currentTheme = useTheme();
 
   return (
     <Pressable
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.container,
+        { 
+          backgroundColor: currentTheme.colors.white,
+          borderBottomColor: currentTheme.colors.gray[100],
+        },
+        pressed && { backgroundColor: currentTheme.colors.gray[50] }
+      ]}
       onPress={onPress}
     >
       <View style={styles.content}>
         {IconComponent && (
-          <View style={styles.iconContainer}>
-            <IconComponent size={24} color={theme.colors.gray[800]} />
+          <View style={[styles.iconContainer, { backgroundColor: currentTheme.colors.gray[100] }]}>
+            <IconComponent size={24} color={currentTheme.colors.gray[800]} />
           </View>
         )}
         <View style={styles.textContainer}>
-          <Text style={[styles.label, selected && styles.labelSelected]}>
+          <Text style={[
+            styles.label,
+            { color: currentTheme.colors.gray[900] },
+            selected && styles.labelSelected
+          ]}>
             {label}
           </Text>
           {description && (
-            <Text style={styles.description}>{description}</Text>
+            <Text style={[styles.description, { color: currentTheme.colors.gray[500] }]}>
+              {description}
+            </Text>
           )}
         </View>
       </View>
       <View style={styles.right}>
         {value && (
-          <Text style={[styles.value, selected && styles.valueSelected]}>
+          <Text style={[
+            styles.value,
+            { color: currentTheme.colors.gray[900] },
+            selected && styles.valueSelected
+          ]}>
             {value}
           </Text>
         )}
-        {showArrow && <ChevronRight size={22} color={theme.colors.gray[400]} />}
+        {showArrow && <ChevronRight size={22} color={currentTheme.colors.gray[400]} />}
       </View>
     </Pressable>
   );
@@ -63,12 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 16,
     marginHorizontal: 24,
-    backgroundColor: theme.colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.gray[100],
-  },
-  pressed: {
-    backgroundColor: theme.colors.gray[50],
   },
   content: {
     flexDirection: 'row',
@@ -83,17 +96,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.gray[100],
     justifyContent: 'center',
     alignItems: 'center',
   },
   label: {
     ...theme.typography.body1,
-    color: theme.colors.gray[900],
   },
   description: {
     ...theme.typography.body2,
-    color: theme.colors.gray[500],
     marginTop: 2,
   },
   labelSelected: {
@@ -106,7 +116,6 @@ const styles = StyleSheet.create({
   },
   value: {
     ...theme.typography.body1,
-    color: theme.colors.gray[900],
   },
   valueSelected: {
     fontFamily: 'Montserrat-SemiBold',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Platform } from 'react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { Plus, Check } from 'lucide-react-native';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
@@ -24,6 +24,7 @@ function getPrimaryTranslation(translation: string | string[]): string {
 }
 
 export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }: KeywordsCarouselProps) {
+  const currentTheme = useTheme();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const { isPhraseSaved, addPhrase, removePhrase } = useSavedPhrases();
 
@@ -66,26 +67,30 @@ export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }:
           const saved = isPhraseSaved(keywordId);
 
           return (
-            <View key={keywordId} style={styles.card}>
+            <View key={keywordId} style={[styles.card, { backgroundColor: currentTheme.colors.gray[100] }]}>
               <Pressable
                 style={styles.cardContent}
                 onPress={() => onKeywordPress(keywordId)}
               >
-                <Text style={styles.targetText}>{targetTranslation}</Text>
-                <Text style={styles.nativeText}>{nativeTranslation}</Text>
+                <Text style={[styles.targetText, { color: currentTheme.colors.gray[900] }]}>
+                  {targetTranslation}
+                </Text>
+                <Text style={[styles.nativeText, { color: currentTheme.colors.gray[500] }]}>
+                  {nativeTranslation}
+                </Text>
               </Pressable>
               <View style={styles.actions}>
                 {audioUrl && (
                   <AudioPlayer url={audioUrl} size={36} />
                 )}
                 <Pressable
-                  style={styles.actionButton}
+                  style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}
                   onPress={() => toggleSavePhrase(keywordId)}
                 >
                   {saved ? (
-                    <Check size={20} color={theme.colors.gray[500]} />
+                    <Check size={20} color={currentTheme.colors.gray[500]} />
                   ) : (
-                    <Plus size={20} color={theme.colors.gray[500]} />
+                    <Plus size={20} color={currentTheme.colors.gray[500]} />
                   )}
                 </Pressable>
               </View>
@@ -109,7 +114,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   card: {
-    backgroundColor: theme.colors.gray[100],
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.lg,
     width: 280,
@@ -122,13 +126,11 @@ const styles = StyleSheet.create({
   },
   targetText: {
     ...theme.typography.heading2,
-    color: theme.colors.gray[900],
     marginBottom: theme.spacing.xs,
     textAlign: 'center',
   },
   nativeText: {
     ...theme.typography.body2,
-    color: theme.colors.gray[500],
     textAlign: 'center',
   },
   actions: {
@@ -140,7 +142,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.gray[50],
     justifyContent: 'center',
     alignItems: 'center',
   },

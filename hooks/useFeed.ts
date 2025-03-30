@@ -205,8 +205,8 @@ export function useFeed() {
       // Filter stories by target language content
       const filteredStories = (stories || [])
         .filter(story => {
-          const content = story.content_json?.[targetLanguage];
-          return content && content.trim();
+          const content = story.content_json?.[targetLanguage] || '';
+          return typeof content === 'string' && content.trim().length > 0;
         })
         .map(story => ({
           id: story.id,

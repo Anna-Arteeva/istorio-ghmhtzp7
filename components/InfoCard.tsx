@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
 import { ExampleStory } from '@/components/ExampleStory';
@@ -30,6 +30,7 @@ interface InfoCardProps {
 const ADVANCED_LEVELS = ['B2', 'C1', 'C2'];
 
 export function InfoCard({ card, onPress }: InfoCardProps) {
+  const currentTheme = useTheme();
   const { nativeLanguage, targetLanguage } = useLanguage();
   const { recordView } = useViews();
   const { level } = useLevel();
@@ -54,18 +55,20 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
     <Pressable 
       style={[
         styles.container,
-        isProgressCard && styles.progressContainer,
-        isCultureCard && styles.cultureContainer,
-        isTipCard && styles.tipContainer
+        isProgressCard && { backgroundColor: currentTheme.colors.primary[100] },
+        isCultureCard && { backgroundColor: currentTheme.colors.gray[900] },
+        isTipCard && { backgroundColor: currentTheme.colors.gray[100] }
       ]}
       onPress={onPress}
     >
       <View style={styles.content}>
         {isCultureCard && (
           <View style={styles.header}>
-            <View style={styles.cultureBadge}>
+            <View style={[styles.cultureBadge, { backgroundColor: currentTheme.colors.semiWhite[700] }]}>
               <View style={styles.languageCode}>
-                <Text style={styles.languageText}>{targetLanguage.toUpperCase()}</Text>
+                <Text style={[styles.languageText, { color: currentTheme.colors.gray[900] }]}>
+                  {targetLanguage.toUpperCase()}
+                </Text>
               </View>
               <View style={[
                 styles.levelBadge,
@@ -79,13 +82,17 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
                 </Text>
               </View>
             </View>
-            <Text style={styles.brandText}>Istorio</Text>
+            <Text style={[styles.brandText, { color: currentTheme.colors.white }]}>
+              Istorio
+            </Text>
           </View>
         )}
         
         {isTipCard && (
-          <View style={styles.tipBadge}>
-            <Text style={styles.tipBadgeText}>Pro Tip</Text>
+          <View style={[styles.tipBadge, { backgroundColor: currentTheme.colors.primary[500] }]}>
+            <Text style={[styles.tipBadgeText, { color: currentTheme.colors.white }]}>
+              Pro Tip
+            </Text>
           </View>
         )}
 
@@ -94,18 +101,19 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
             targetText={targetContent.title}
             nativeText={nativeContent.title}
             isShortStory={false}
+            isInfoCard={true}
             customStyles={{
               target: [
                 styles.title,
-                isCultureCard && styles.cultureTitle,
-                isTipCard && styles.tipTitle,
-                isProgressCard && styles.progressTitle
+                isCultureCard && [styles.cultureTitle, { color: currentTheme.colors.white }],
+                isTipCard && [styles.tipTitle, { color: currentTheme.colors.gray[900] }],
+                isProgressCard && [styles.progressTitle, { color: currentTheme.colors.gray[900] }]
               ],
               native: [
                 styles.titleTranslation,
-                isCultureCard && styles.cultureTitleTranslation,
-                isTipCard && styles.tipTitleTranslation,
-                isProgressCard && styles.progressTitleTranslation
+                isCultureCard && [styles.cultureTitleTranslation, { color: currentTheme.colors.gray[300] }],
+                isTipCard && [styles.tipTitleTranslation, { color: currentTheme.colors.gray[500] }],
+                isProgressCard && [styles.progressTitleTranslation, { color: currentTheme.colors.gray[500] }]
               ]
             }}
           />
@@ -116,29 +124,34 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
             targetText={targetContent.description}
             nativeText={nativeContent.description}
             isShortStory={false}
+            isInfoCard={true}
             customStyles={{
               target: [
                 styles.description,
-                isCultureCard && styles.cultureDescription,
-                isTipCard && styles.tipDescription,
-                isProgressCard && styles.progressDescription
+                isCultureCard && [styles.cultureDescription, { color: currentTheme.colors.white }],
+                isTipCard && [styles.tipDescription, { color: currentTheme.colors.gray[900] }],
+                isProgressCard && [styles.progressDescription, { color: currentTheme.colors.gray[900] }]
               ],
               native: [
                 styles.descriptionTranslation,
-                isCultureCard && styles.cultureDescriptionTranslation,
-                isTipCard && styles.tipDescriptionTranslation,
-                isProgressCard && styles.progressDescriptionTranslation
+                isCultureCard && [styles.cultureDescriptionTranslation, { color: currentTheme.colors.gray[300] }],
+                isTipCard && [styles.tipDescriptionTranslation, { color: currentTheme.colors.gray[500] }],
+                isProgressCard && [styles.progressDescriptionTranslation, { color: currentTheme.colors.gray[500] }]
               ]
             }}
           />
         </View>
 
         {targetContent.quote && (
-          <View style={styles.quoteContainer}>
-            <View style={styles.quoteBadge}>
-              <Text style={styles.quoteBadgeText}>{targetLanguage.toUpperCase()}</Text>
+          <View style={[styles.quoteContainer, { backgroundColor: currentTheme.colors.semiWhite[600] }]}>
+            <View style={[styles.quoteBadge, { backgroundColor: currentTheme.colors.white }]}>
+              <Text style={[styles.quoteBadgeText, { color: currentTheme.colors.gray[900] }]}>
+                {targetLanguage.toUpperCase()}
+              </Text>
             </View>
-            <Text style={styles.quoteText}>{targetContent.quote}</Text>
+            <Text style={[styles.quoteText, { color: currentTheme.colors.gray[900] }]}>
+              {targetContent.quote}
+            </Text>
           </View>
         )}
         
@@ -155,16 +168,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.md,
   },
-  progressContainer: {
-    backgroundColor: theme.colors.primary[100],
-  },
-  cultureContainer: {
-    backgroundColor: theme.colors.gray[900],
-  },
-  tipContainer: {
-    backgroundColor: theme.colors.gray[100],
-    marginTop: theme.spacing.xl,
-  },
   content: {
     padding: theme.spacing.lg,
   },
@@ -177,7 +180,6 @@ const styles = StyleSheet.create({
   cultureBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.semiWhite[700],
     borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
   },
@@ -199,10 +201,8 @@ const styles = StyleSheet.create({
   },
   brandText: {
     fontFamily: 'Montserrat-ExtraBold',
-    color: theme.colors.white,
   },
   tipBadge: {
-    backgroundColor: theme.colors.primary[500],
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.xs,
     borderBottomRightRadius: theme.borderRadius.lg,
@@ -212,11 +212,9 @@ const styles = StyleSheet.create({
   },
   tipBadgeText: {
     ...theme.typography.caption,
-    color: theme.colors.white,
     fontFamily: 'Montserrat-Bold',
   },
   quoteContainer: {
-    backgroundColor: theme.colors.semiWhite[600],
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.md,
     marginTop: theme.spacing.xl,
@@ -225,19 +223,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -10,
     left: 0,
-    backgroundColor: theme.colors.white,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderBottomRightRadius: theme.borderRadius.lg,
   },
   quoteBadgeText: {
     ...theme.typography.caption,
-    color: theme.colors.gray[900],
     fontFamily: 'Montserrat-Bold',
   },
   quoteText: {
     ...theme.typography.body1,
-    color: theme.colors.gray[900],
     marginTop: theme.spacing.sm,
   },
   title: {
@@ -245,60 +240,52 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
     marginTop: theme.spacing.sm,
   },
-  progressTitle: {
-    color: theme.colors.gray[900],
+  titleTranslation: {
+    ...theme.typography.body1,
+    marginBottom: theme.spacing.md,
+  },
+  description: {
+    ...theme.typography.body1,
+    marginBottom: theme.spacing.md,
+  },
+  descriptionTranslation: {
+    ...theme.typography.body2,
+    marginBottom: theme.spacing.md,
   },
   cultureTitle: {
     color: theme.colors.white,
   },
+  cultureTitleTranslation: {
+    color: theme.colors.gray[300],
+  },
+  cultureDescription: {
+    color: theme.colors.white,
+  },
+  cultureDescriptionTranslation: {
+    color: theme.colors.gray[300],
+  },
   tipTitle: {
     color: theme.colors.gray[900],
-  },
-  titleContainer: {
-    marginBottom: theme.spacing.md,
-  },
-  titleTranslation: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[500],
-    marginTop: theme.spacing.xs,
-  },
-  cultureTitleTranslation: {
-    color: theme.colors.semiWhite[600],
   },
   tipTitleTranslation: {
     color: theme.colors.gray[500],
   },
+  tipDescription: {
+    color: theme.colors.gray[900],
+  },
+  tipDescriptionTranslation: {
+    color: theme.colors.gray[500],
+  },
+  progressTitle: {
+    color: theme.colors.gray[900],
+  },
   progressTitleTranslation: {
     color: theme.colors.gray[500],
   },
-  descriptionContainer: {
-    marginBottom: theme.spacing.lg,
-  },
-  description: {
-    ...theme.typography.bodyLead,
-  },
-  descriptionTranslation: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[500],
-    marginTop: theme.spacing.xs,
-  },
   progressDescription: {
-    color: theme.colors.gray[800],
+    color: theme.colors.gray[900],
   },
   progressDescriptionTranslation: {
-    color: theme.colors.gray[500],
-  },
-  cultureDescription: {
-    color: theme.colors.white,
-    opacity: 0.8,
-  },
-  cultureDescriptionTranslation: {
-    color: theme.colors.semiWhite[600],
-  },
-  tipDescription: {
-    color: theme.colors.gray[700],
-  },
-  tipDescriptionTranslation: {
     color: theme.colors.gray[500],
   },
 });

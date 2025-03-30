@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { useState, useEffect } from 'react';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { Flashcard } from '@/components/Flashcard';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -26,6 +26,7 @@ function getPrimaryTranslation(translation: string | string[]): string {
 }
 
 export default function PhrasesScreen() {
+  const currentTheme = useTheme();
   const { savedPhrases, removePhrase } = useSavedPhrases();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const [selectedPhrase, setSelectedPhrase] = useState<PhraseWithTranslations | null>(null);
@@ -81,22 +82,26 @@ export default function PhrasesScreen() {
 
   const renderPhrase = ({ item }: { item: PhraseWithTranslations }) => (
     <Pressable
-      style={styles.phraseCard}
+      style={[styles.phraseCard, { backgroundColor: currentTheme.colors.white }]}
       onPress={() => handlePhrasePress(item)}
     >
       <View style={styles.phraseContent}>
-        <Text style={styles.phrase}>{item.targetText}</Text>
-        <Text style={styles.translation}>{item.nativeText}</Text>
+        <Text style={[styles.phrase, { color: currentTheme.colors.gray[800] }]}>
+          {item.targetText}
+        </Text>
+        <Text style={[styles.translation, { color: currentTheme.colors.gray[500] }]}>
+          {item.nativeText}
+        </Text>
       </View>
       <View style={styles.actions}>
         {item.audioUrl && (
           <AudioPlayer url={item.audioUrl} />
         )}
         <Pressable
-          style={styles.actionButton}
+          style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}
           onPress={() => handleRemovePhrase(item.id)}
         >
-          <Trash2 size={20} color={theme.colors.gray[400]} />
+          <Trash2 size={20} color={currentTheme.colors.gray[400]} />
         </Pressable>
       </View>
     </Pressable>
@@ -106,7 +111,7 @@ export default function PhrasesScreen() {
   const reversedPhrases = [...phrasesWithTranslations].reverse();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
       <FlatList
         data={reversedPhrases}
         keyExtractor={(item) => item.id}
@@ -114,7 +119,7 @@ export default function PhrasesScreen() {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>
+            <Text style={[styles.emptyStateText, { color: currentTheme.colors.gray[500] }]}>
               No saved phrases yet. Add some phrases from stories!
             </Text>
           </View>
@@ -139,13 +144,11 @@ export default function PhrasesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.pageBackground,
   },
   list: {
     padding: theme.spacing.md,
   },
   phraseCard: {
-    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.md,
     marginBottom: theme.spacing.sm,
@@ -158,12 +161,10 @@ const styles = StyleSheet.create({
   },
   phrase: {
     ...theme.typography.body1,
-    color: theme.colors.gray[800],
     marginBottom: theme.spacing.xs,
   },
   translation: {
     ...theme.typography.body2,
-    color: theme.colors.gray[500],
   },
   actions: {
     flexDirection: 'row',
@@ -175,7 +176,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.gray[50],
   },
   emptyState: {
     padding: theme.spacing.xl,
@@ -183,7 +183,6 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     ...theme.typography.body1,
-    color: theme.colors.gray[500],
     textAlign: 'center',
   },
 });

@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
@@ -11,20 +11,21 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const { targetLanguage } = useLanguage();
   const { level } = useLevel();
+  const currentTheme = useTheme();
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ backgroundColor: theme.colors.pageBackground }}>
+      <SafeAreaView style={{ backgroundColor: currentTheme.colors.pageBackground }}>
         <View style={{ height: Platform.OS === 'ios' ? 0 : 20 }} />
       </SafeAreaView>
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: theme.colors.pageBackground,
-            borderTopColor: theme.colors.gray[200],
+            backgroundColor: currentTheme.colors.pageBackground,
+            borderTopColor: currentTheme.colors.gray[200],
           },
-          tabBarActiveTintColor: theme.colors.primary[500],
-          tabBarInactiveTintColor: theme.colors.gray[500],
+          tabBarActiveTintColor: currentTheme.colors.primary[500],
+          tabBarInactiveTintColor: currentTheme.colors.gray[500],
           header: ({ route }) => {
             const title = t(`navigation.tabs.${route.name}`) || '';
             return title ? (
