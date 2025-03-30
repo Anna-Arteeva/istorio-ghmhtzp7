@@ -164,7 +164,6 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
 
         {associatedStories.length > 0 && (
           <View style={styles.storiesSection}>
-            <Text style={styles.storiesTitle}>Stories with this phrase</Text>
             <View style={styles.storiesList}>
               {associatedStories.map((story) => (
                 <View key={story.id} style={styles.storyCard}>

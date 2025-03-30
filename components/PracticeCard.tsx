@@ -229,7 +229,7 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
       // Get all keywords for story display
       const { data: allKeywordsData, error: allKeywordsError } = await supabase
         .from('keywords')
-        .select('keyword_id, translations_json, audio_json');
+        .select('keyword_id, translations_json, audio_json, word_level');
 
       if (allKeywordsError) {
         throw allKeywordsError;
