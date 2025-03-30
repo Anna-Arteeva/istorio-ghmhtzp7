@@ -14,13 +14,13 @@ export default function TabLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView style={{ backgroundColor: theme.colors.white }}>
+      <SafeAreaView style={{ backgroundColor: theme.colors.pageBackground }}>
         <View style={{ height: Platform.OS === 'ios' ? 0 : 20 }} />
       </SafeAreaView>
       <Tabs
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.pageBackground,
             borderTopColor: theme.colors.gray[200],
           },
           tabBarActiveTintColor: theme.colors.primary[500],

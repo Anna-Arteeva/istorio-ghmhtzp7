@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     paddingHorizontal: 16,
     paddingBottom: 12,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.pageBackground,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,

@@ -188,7 +188,7 @@ export default function PracticeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.pageBackground,
   },
   contentWrapper: {
     flex: 1,

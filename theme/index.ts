@@ -37,8 +37,10 @@ export const theme = {
       600: 'rgba(255, 255, 255, 0.6)',
       700: 'rgba(255, 255, 255, 0.7)',
       800: 'rgba(255, 255, 255, 0.8)',
+      900: 'rgba(255, 255, 255, 0.9)',
     },
     white: '#FFFFFF',
+    pageBackground: '#F8F8F8',
   },
   shadows: {
     sm: Platform.select({

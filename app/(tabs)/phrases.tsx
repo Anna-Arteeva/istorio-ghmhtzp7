@@ -139,7 +139,7 @@ export default function PhrasesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.pageBackground,
   },
   list: {
     padding: theme.spacing.md,

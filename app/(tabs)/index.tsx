@@ -229,7 +229,7 @@ export default function StoriesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.pageBackground,
   },
   scrollContent: {
     flexGrow: 1,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.pageBackground,
     gap: theme.spacing.md,
   },
   loadingMore: {
