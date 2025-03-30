@@ -8,7 +8,13 @@ import {
   Platform,
   LayoutAnimation,
 } from 'react-native';
-import { Languages, Plus, Check, ChevronDown, ChevronUp } from 'lucide-react-native';
+import {
+  Languages,
+  Plus,
+  Check,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react-native';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -189,6 +195,16 @@ export function StoryCard({
 
     return (
       <View key={index} style={styles.keyword}>
+        <Pressable
+          style={styles.actionButton}
+          onPress={(event) => toggleSavePhrase(keywordId, event)}
+        >
+          {saved ? (
+            <Check size={20} color={theme.colors.gray[500]} />
+          ) : (
+            <Plus size={20} color={theme.colors.gray[500]} />
+          )}
+        </Pressable>
         <View style={styles.keywordTextContainer}>
           <Text style={styles.keywordText}>{targetTranslation}</Text>
           {nativeTranslation && (
@@ -197,16 +213,6 @@ export function StoryCard({
         </View>
         <View style={styles.keywordActions}>
           {audioUrl && <AudioPlayer url={audioUrl} />}
-          <Pressable
-            style={styles.actionButton}
-            onPress={(event) => toggleSavePhrase(keywordId, event)}
-          >
-            {saved ? (
-              <Check size={20} color={theme.colors.gray[500]} />
-            ) : (
-              <Plus size={20} color={theme.colors.gray[500]} />
-            )}
-          </Pressable>
         </View>
       </View>
     );
@@ -254,25 +260,29 @@ export function StoryCard({
 
       {!hideActions && story?.explanations_json?.[nativeLanguage] && (
         <View>
-          <Pressable 
+          <Pressable
             style={[
               styles.decoderButton,
-              isExplanationVisible && styles.decoderButtonActive
-            ]} 
+              isExplanationVisible && styles.decoderButtonActive,
+            ]}
             onPress={toggleExplanation}
           >
-            <FaceThinkingIcon size={16} color={isExplanationVisible ? theme.colors.white : theme.colors.gray[500]} />
-            <Text style={[
-              styles.decoderButtonText,
-              isExplanationVisible && styles.decoderButtonTextActive
-            ]}>
+            <FaceThinkingIcon
+              size={15}
+              color={
+                isExplanationVisible
+                  ? theme.colors.white
+                  : theme.colors.gray[500]
+              }
+            />
+            <Text
+              style={[
+                styles.decoderButtonText,
+                isExplanationVisible && styles.decoderButtonTextActive,
+              ]}
+            >
               {t('common.storyDecoder')}
             </Text>
-            {isExplanationVisible ? (
-              <ChevronUp size={16} color={theme.colors.white} />
-            ) : (
-              <ChevronDown size={16} color={theme.colors.gray[500]} />
-            )}
           </Pressable>
           {isExplanationVisible && (
             <View style={styles.explanationContainer}>
@@ -378,14 +388,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: theme.spacing.sm,
   },
-  content: {
-    padding: theme.spacing.md,
-    gap: theme.spacing.lg,
-  },
+  content: {},
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: theme.spacing.md,
   },
   headerLeft: {
     flex: 1,
@@ -425,23 +433,28 @@ const styles = StyleSheet.create({
   actionButtonActive: {
     backgroundColor: theme.colors.gray[900],
   },
-  storyContent: {},
+  storyContent: {
+    padding: theme.spacing.md,
+  },
   keywords: {
     flexDirection: 'column',
-    gap: theme.spacing.xs,
+    backgroundColor: theme.colors.gray[50],
+    paddingHorizontal: theme.spacing.md,
+    display: 'inline-block',
   },
   keyword: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: theme.spacing.sm,
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.gray[200],
+    gap: theme.spacing.md,
+    marginVertical: theme.spacing.md,
   },
   keywordTextContainer: {
     flex: 1,
   },
   keywordText: {
-    ...theme.typography.body2,
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 14,
+    lineHeight: 15,
     color: theme.colors.gray[800],
   },
   keywordTranslation: {
@@ -458,17 +471,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: theme.spacing.xs,
+    gap: theme.spacing.sm,
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.gray[50],
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.full,
+    alignSelf: 'baseline',
+    marginBottom: theme.spacing.lg,
+    marginHorizontal: theme.spacing.md,
   },
   decoderButtonActive: {
     backgroundColor: theme.colors.gray[900],
   },
   decoderButtonText: {
-    ...theme.typography.bodyBold,
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 14,
     color: theme.colors.gray[500],
     flex: 1,
   },
@@ -476,10 +493,8 @@ const styles = StyleSheet.create({
     color: theme.colors.white,
   },
   explanationContainer: {
-    backgroundColor: theme.colors.gray[50],
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    marginTop: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   explanationText: {
     ...theme.typography.body1,
@@ -490,3 +505,6 @@ const styles = StyleSheet.create({
 export { StoryCard };
 
 export { StoryCard };
+
+
+export { StoryCard }
