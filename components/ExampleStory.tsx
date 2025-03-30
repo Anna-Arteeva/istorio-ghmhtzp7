@@ -6,7 +6,6 @@ import { HelpBadge } from '@/components/HelpBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { supabase } from '@/lib/supabase';
-import { ExplanationSheet } from '@/components/ExplanationSheet';
 
 export function ExampleStory() {
   const { t } = useTranslation();
@@ -91,7 +90,6 @@ export function ExampleStory() {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.storyContainer}>
         {/* Play audio badge - Top Left */}
         <HelpBadge 
@@ -114,7 +112,6 @@ export function ExampleStory() {
           position={{ bottom: 220, left: -28 }}
         />
       
-        
         {/* Learn phrases badge - Bottom Left */}
         <HelpBadge 
           text={t('example.phrases')}
@@ -136,12 +133,6 @@ export function ExampleStory() {
           onShare={() => {}}
         />
       </View>
-
-      <ExplanationSheet
-        explanation={story?.explanations_json?.[nativeLanguage] || null}
-        visible={isExplanationVisible}
-        onClose={() => setIsExplanationVisible(false)}
-      />
     </View>
   );
 }
