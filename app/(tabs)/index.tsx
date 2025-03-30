@@ -4,7 +4,6 @@ import { StoryCard, type Story } from '@/components/StoryCard';
 import { InfoCard } from '@/components/InfoCard';
 import { HelpBadge } from '@/components/HelpBadge'; 
 import { theme } from '@/theme';
-import { ExplanationSheet } from '@/components/ExplanationSheet';
 import { useTranslation } from '@/hooks/useTranslation';
 import { KeywordsCarousel } from '@/components/KeywordsCarousel';
 import { useFeed } from '@/hooks/useFeed';
@@ -31,8 +30,6 @@ export default function StoriesScreen() {
   const { visits } = useVisits();
   const [stories, setStories] = useState<Story[]>([]);
   const [infoCards, setInfoCards] = useState<InfoCardType[]>([]);
-  const [currentExplanation, setCurrentExplanation] = useState<string | null>(null);
-  const [isExplanationVisible, setIsExplanationVisible] = useState(false);
   const { width } = useWindowDimensions();
   const [mounted, setMounted] = useState(false);
   const [selectedKeyword, setSelectedKeyword] = useState<{
@@ -75,12 +72,6 @@ export default function StoriesScreen() {
     return { data: columns };
   }, [feedItems, numColumns]);
 
-  const handleExplainPress = useCallback((storyId: string) => {
-    const story = stories.find(s => s.id === storyId);
-    const explanation = story?.explanations_json?.[nativeLanguage] || null;
-    setCurrentExplanation(explanation);
-    setIsExplanationVisible(true);
-  }, [stories, nativeLanguage]);
 
   if (loading) {
     return (
@@ -134,7 +125,6 @@ export default function StoriesScreen() {
                   <StoryCard
                     story={item}
                     keywords={keywords}
-                    onExplain={() => handleExplainPress(item.id)}
                     onShare={() => console.log('Share story:', item.id)}
                   />
                 )}
@@ -204,7 +194,6 @@ export default function StoriesScreen() {
                       <StoryCard
                         story={item as Story}
                         keywords={keywords}
-                        onExplain={() => handleExplainPress(item.id)}
                         onShare={() => console.log('Share story:', item.id)}
                       />
                     )}
@@ -233,11 +222,6 @@ export default function StoriesScreen() {
   return (
     <View style={styles.container}>
       {renderContent()}
-      <ExplanationSheet
-        explanation={currentExplanation}
-        visible={isExplanationVisible}
-        onClose={() => setIsExplanationVisible(false)}
-      />
     </View>
   );
 }

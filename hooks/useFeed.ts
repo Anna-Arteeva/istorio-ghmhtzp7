@@ -152,7 +152,7 @@ function isWithinLastTwoHours(timestamp: string | null): boolean {
 }
 
 export function useFeed() {
-  const { targetLanguage } = useLanguage();
+  const { targetLanguage, nativeLanguage } = useLanguage();
   const { level } = useLevel();
   const { firstVisit, visits } = useVisits();
   const [feedItems, setFeedItems] = useState<any[]>([]);
@@ -179,7 +179,18 @@ export function useFeed() {
       // Build query
       let query = supabase
           .from('stories')
-          .select('*', { count: 'exact' })
+          .select(`
+            id,
+            type,
+            level,
+            image_url,
+            keywords,
+            audio_json,
+            content_json,
+            translations_json,
+            explanations_json,
+            gradient
+          `, { count: 'exact' })
           .eq('story_status', 'published')
           .in('level', getAccessibleLevels(level));
       
@@ -190,7 +201,7 @@ export function useFeed() {
       const { data: stories, error: storiesError, count } = await query.range(from, to);
 
       if (storiesError) throw storiesError;
-
+      
       // Filter stories by target language content
       const filteredStories = (stories || [])
         .filter(story => {
@@ -250,6 +261,12 @@ export function useFeed() {
         visits,
         firstVisit
       );
+      
+      // Log the first story's explanations for debugging
+      if (distributedItems.length > 0) {
+        const firstStory = distributedItems.find(item => item.type !== 'keywords' && !('active_days' in item));
+        console.log('First story explanations:', firstStory?.explanations_json);
+      }
 
       if (isLoadingMore) {
         setFeedItems(prev => [...prev, ...distributedItems]);

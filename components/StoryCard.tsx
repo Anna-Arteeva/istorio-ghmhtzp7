@@ -6,8 +6,9 @@ import {
   StyleSheet,
   Pressable,
   Platform,
+  LayoutAnimation,
 } from 'react-native';
-import { Languages, Plus, Check } from 'lucide-react-native';
+import { Languages, Plus, Check, ChevronDown, ChevronUp } from 'lucide-react-native';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -54,7 +55,6 @@ export interface Story {
 interface StoryCardProps {
   story: Story;
   keywords: Record<string, Keyword>;
-  onExplain?: () => void;
   onShare?: () => void;
   hideImage?: boolean;
   hideAudio?: boolean;
@@ -82,7 +82,6 @@ function getRandomGradient() {
 export function StoryCard({
   story,
   keywords,
-  onExplain,
   onShare,
   hideImage = false,
   hideAudio = false,
@@ -104,6 +103,7 @@ export function StoryCard({
   const [hideTranslations, setHideTranslations] = useState(
     !showTranslationsByDefault
   );
+  const [isExplanationVisible, setIsExplanationVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const targetContent = story?.content_json?.[targetLanguage];
@@ -154,6 +154,11 @@ export function StoryCard({
       audioUrl: keyword.audio_json?.[targetLanguage],
     });
     setIsFlashcardVisible(true);
+  };
+
+  const toggleExplanation = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsExplanationVisible(!isExplanationVisible);
   };
 
   const toggleSavePhrase = async (keywordId: string, event: any) => {
@@ -247,13 +252,36 @@ export function StoryCard({
         ))}
       </View>
 
-      {!hideActions && onExplain && (
-        <Pressable style={styles.decoderButton} onPress={onExplain}>
-          <FaceThinkingIcon size={16} color={theme.colors.gray[500]} />
-          <Text style={styles.decoderButtonText}>
-            {t('common.storyDecoder')}
-          </Text>
-        </Pressable>
+      {!hideActions && story?.explanations_json?.[nativeLanguage] && (
+        <View>
+          <Pressable 
+            style={[
+              styles.decoderButton,
+              isExplanationVisible && styles.decoderButtonActive
+            ]} 
+            onPress={toggleExplanation}
+          >
+            <FaceThinkingIcon size={16} color={isExplanationVisible ? theme.colors.white : theme.colors.gray[500]} />
+            <Text style={[
+              styles.decoderButtonText,
+              isExplanationVisible && styles.decoderButtonTextActive
+            ]}>
+              {t('common.storyDecoder')}
+            </Text>
+            {isExplanationVisible ? (
+              <ChevronUp size={16} color={theme.colors.white} />
+            ) : (
+              <ChevronDown size={16} color={theme.colors.gray[500]} />
+            )}
+          </Pressable>
+          {isExplanationVisible && (
+            <View style={styles.explanationContainer}>
+              <Text style={styles.explanationText}>
+                {story.explanations_json[nativeLanguage]}
+              </Text>
+            </View>
+          )}
+        </View>
       )}
 
       {Object.keys(keywords).length > 0 && (
@@ -435,11 +463,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.gray[50],
     borderRadius: theme.borderRadius.md,
-    marginVertical: theme.spacing.md,
+  },
+  decoderButtonActive: {
+    backgroundColor: theme.colors.gray[900],
   },
   decoderButtonText: {
     ...theme.typography.bodyBold,
     color: theme.colors.gray[500],
+    flex: 1,
+  },
+  decoderButtonTextActive: {
+    color: theme.colors.white,
+  },
+  explanationContainer: {
+    backgroundColor: theme.colors.gray[50],
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    marginTop: theme.spacing.sm,
+  },
+  explanationText: {
+    ...theme.typography.body1,
+    color: theme.colors.gray[800],
   },
 });
 
