@@ -23,6 +23,16 @@ const customFetch = async (url: string, options: any = {}) => {
       };
     }
 
+    // Add CORS headers for web platform
+    if (Platform.OS === 'web') {
+      options.headers = {
+        ...options.headers,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': '*',
+      };
+    }
+
     const response = await fetch(url, options);
     
     if (!response.ok) {
@@ -49,30 +59,12 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false
+    detectSessionInUrl: Platform.OS === 'web'
   },
   global: {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
-    }
-  },
-  // Add retry configuration
-  fetch: customFetch,
-  db: {
-    schema: 'public'
-  },
-  // Add request timeout
-  realtime: {
-    timeout: 20000,
-    params: {
-      eventsPerSecond: 10
-    }
-  },
-  // Add retry configuration
-  realtime: {
-    params: {
-      eventsPerSecond: 10
     }
   }
 });
