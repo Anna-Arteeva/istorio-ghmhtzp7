@@ -98,6 +98,7 @@ export function StoryCard({
   const { nativeLanguage, targetLanguage } = useLanguage();
   const { level } = useLevel();
   const { addPhrase, removePhrase, isPhraseSaved } = useSavedPhrases();
+  const { showTranslationsByDefault } = useSettings();
   const [selectedKeyword, setSelectedKeyword] = useState<{
     id: string;
     targetText: string;
@@ -105,6 +106,7 @@ export function StoryCard({
     audioUrl?: string;
   } | null>(null);
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
+  const [showTranslations, setShowTranslations] = useState(showTranslationsByDefault);
   const [isExplanationVisible, setIsExplanationVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -222,6 +224,28 @@ export function StoryCard({
             <AudioPlayer url={story.audioUrl} size={48} variant="primary" />
           )}
         </View>
+        {!hideActions && (
+          <View style={styles.headerRight}>
+            <Pressable
+              style={[
+                styles.actionButton, 
+                !showTranslations && styles.actionButtonActive,
+              ]}
+              onPress={() => {
+                setShowTranslations(!showTranslations);
+              }}
+            >
+              <Languages
+                size={20}
+                color={
+                  !showTranslations
+                    ? theme.colors.white 
+                    : theme.colors.gray[500]
+                }
+              />
+            </Pressable>
+          </View>
+        )}
       </View>
 
       <View style={styles.storyContent}>
@@ -231,6 +255,7 @@ export function StoryCard({
             targetText={sentence}
             nativeText={nativeSentences[index] || ''}
             isShortStory={story.type === 'short'}
+            forceOpen={showTranslations}
           />
         ))}
       </View>
