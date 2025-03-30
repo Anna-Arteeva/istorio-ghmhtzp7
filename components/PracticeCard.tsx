@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, Image } from 'react-native';
-import { BookOpen, Play, Pause } from 'lucide-react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { Play, Pause } from 'lucide-react-native';
 import { theme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabase';
-import { StoryModal } from '@/components/StoryModal';
 import { Platform } from 'react-native';
 import { Audio } from 'expo-av';
-import { findSentencesWithKeyword } from '@/lib/textUtils';
+import { StoryCard } from '@/components/StoryCard';
 
-interface Example {
-  storyId: string;
+interface Story {
+  id: string;
+  type: 'long' | 'short';
+  description: string;
+  level: string;
   imageUrl: string | null;
-  sentence: string;
-  translation: string;
-  story?: any;
+  keywords: string[];
+  audioUrl?: string;
+  translations_json?: Record<string, string>;
+  content_json?: Record<string, string>;
+  explanations_json?: Record<string, string>;
+  gradient?: string;
 }
 
 interface PracticeCardProps {
@@ -31,9 +36,7 @@ interface PracticeCardProps {
 
 export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigate }: PracticeCardProps) {
   const { targetLanguage, nativeLanguage } = useLanguage();
-  const [examples, setExamples] = useState<Example[]>([]);
-  const [selectedStory, setSelectedStory] = useState<any | null>(null);
-  const [isStoryModalVisible, setIsStoryModalVisible] = useState(false);
+  const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
   const [mounted, setMounted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -52,7 +55,7 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
 
   useEffect(() => {
     if (mounted && phrase?.id) {
-      fetchExampleSentences();
+      fetchAssociatedStories();
       if (autoPlay) {
         loadAndPlayAudio();
       } else {
@@ -188,222 +191,103 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
     }
   };
 
-  async function fetchExampleSentences() {
-    if (!mounted || !phrase) return;
+  async function fetchAssociatedStories() {
+    if (!mounted || !phrase?.id) return;
 
     try {
       setIsLoading(true);
-      setError(null);
-
       // First get the keyword data to get associated stories
-      const { data: keywordsData, error: keywordsError } = await supabase
+      const { data: keywordData, error: keywordError } = await supabase
         .from('keywords')
-        .select('associated_stories, translations_json')
+        .select('associated_stories')
         .eq('keyword_id', phrase.id)
         .single();
 
-      if (keywordsError) {
-        throw keywordsError;
-      }
-
-      if (!keywordsData?.associated_stories?.length) {
-        setExamples([]);
-        return;
-      }
+      if (keywordError) throw keywordError;
+      if (!keywordData?.associated_stories?.length) return;
 
       // Get all associated stories
       const { data: storiesData, error: storiesError } = await supabase
         .from('stories')
         .select('*')
-        .in('id', keywordsData.associated_stories);
+        .in('id', keywordData.associated_stories);
 
-      if (storiesError) {
-        throw storiesError;
-      }
-
-      if (!storiesData) {
-        setExamples([]);
-        return;
-      }
+      if (storiesError) throw storiesError;
+      if (!storiesData) return;
 
       // Get all keywords for story display
-      const { data: allKeywordsData, error: allKeywordsError } = await supabase
+      const { data: keywordsData } = await supabase
         .from('keywords')
-        .select('keyword_id, translations_json, audio_json, word_level');
-
-      if (allKeywordsError) {
-        throw allKeywordsError;
-      }
+        .select('keyword_id, translations_json, audio_json');
 
       if (mounted) {
-        const keywordsMap = (allKeywordsData || []).reduce((acc, k) => {
+        const keywordsMap = (keywordsData || []).reduce((acc, k) => {
           acc[k.keyword_id] = k;
           return acc;
         }, {} as Record<string, any>);
         setKeywords(keywordsMap);
 
-        const foundExamples: Example[] = [];
-        const usedStoryIds = new Set<string>();
+        const formattedStories = storiesData.map(story => ({
+          id: story.id,
+          type: story.type,
+          level: story.level,
+          imageUrl: story.image_url,
+          keywords: story.keywords || [],
+          audioUrl: story.audio_json?.[targetLanguage] || story.audio_json?.en,
+          translations_json: story.translations_json,
+          content_json: story.content_json,
+          explanations_json: story.explanations_json,
+          gradient: story.gradient,
+        }));
 
-        // Process each story
-        storiesData.forEach((story) => {
-          if (usedStoryIds.has(story.id)) return;
-
-          const targetContent = story.content_json?.[targetLanguage];
-          const nativeContent = story.content_json?.[nativeLanguage];
-
-          if (!targetContent || !nativeContent) return;
-
-          const targetSentences = parseContent(targetContent);
-          const nativeSentences = parseContent(nativeContent);
-
-          const matchedIndices = findSentencesWithKeyword(
-            targetSentences.map(s => s.text),
-            phrase.targetText,
-            targetLanguage
-          );
-
-          if (matchedIndices.length > 0) {
-            const index = matchedIndices[0];
-            if (nativeSentences[index]) {
-              foundExamples.push({
-                storyId: story.id,
-                imageUrl: story.image_url,
-                sentence: targetSentences[index].text.trim(),
-                translation: nativeSentences[index].text.trim(),
-                story: story,
-              });
-              usedStoryIds.add(story.id);
-            }
-          }
-        });
-
-        setExamples(foundExamples);
+        setAssociatedStories(formattedStories);
       }
     } catch (error) {
-      console.error('Error fetching example sentences:', error);
-      setError('Failed to fetch examples');
+      console.error('Error fetching associated stories:', error);
     } finally {
       setIsLoading(false);
     }
   }
 
-  function parseContent(content: any) {
-    if (!content) return [];
-
-    if (content.sentences && Array.isArray(content.sentences)) {
-      return content.sentences;
-    }
-
-    if (content.text) {
-      return content.text.split('|').map(text => ({ text: text.trim() }));
-    }
-
-    return [];
-  }
-
-  const handleOpenStory = (example: Example) => {
-    if (!mounted) return;
-    if (example.story) {
-      if (onNavigate) {
-        onNavigate();
-      }
-      setSelectedStory(example.story);
-      setIsStoryModalVisible(true);
-    }
-  };
-
   if (!phrase) return null;
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.card}>
+      <View style={styles.header}>
+        <View style={styles.phraseContainer}>
         {phrase.audioUrl && (
-          <View style={styles.audioContainer}>
-            <Pressable
-              style={[
-                styles.audioButton,
-                isPlaying && styles.audioButtonActive,
-                error && styles.audioButtonError,
-              ]}
-              onPress={togglePlayback}
-            >
-              {isPlaying ? (
-                <Pause size={24} color={theme.colors.white} />
-              ) : (
-                <Play
-                  size={24}
-                  color={
-                    error
-                      ? theme.colors.error[500]
-                      : theme.colors.white
-                  }
-                />
-              )}
-            </Pressable>
-          </View>
+          <Pressable
+            style={[styles.playButton, isPlaying && styles.playButtonActive]}
+            onPress={togglePlayback}
+          >
+            {isPlaying ? (
+              <Pause size={24} color={theme.colors.white} />
+            ) : (
+              <Play size={24} color={theme.colors.white} />
+            )}
+          </Pressable>
         )}
-        
-        <Text style={styles.targetText}>{phrase.targetText}</Text>
-        <Text style={styles.nativeText}>{phrase.nativeText}</Text>
+          <Text style={styles.phraseText}>{phrase.targetText}</Text>
+          <Text style={styles.translationText}>{phrase.nativeText}</Text>
+        </View>
       </View>
 
-      {isLoading && (
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading examples...</Text>
-        </View>
-      )}
-
-      {error && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      )}
-
-      {!isLoading && !error && examples.length > 0 && (
-        <View style={styles.examplesSection}>
-          <View style={styles.examplesList}>
-            {examples.map((example, index) => (
-              <View key={index} style={styles.exampleCard}>
-                {example.imageUrl && (
-                  <Image
-                    source={{ uri: example.imageUrl }}
-                    style={styles.storyImage}
-                    resizeMode="cover"
-                  />
-                )}
-                <View style={styles.exampleContent}>
-                  <Text style={styles.exampleText}>
-                    {example.sentence}
-                  </Text>
-                  <Text style={styles.exampleTranslation}>
-                    {example.translation}
-                  </Text>
-                  <Pressable
-                    style={styles.readMoreButton}
-                    onPress={() => handleOpenStory(example)}
-                  >
-                    <BookOpen size={16} color={theme.colors.gray[800]} />
-                    <Text style={styles.readMoreText}>Read the Full Story</Text>
-                  </Pressable>
-                </View>
+      {associatedStories.length > 0 && (
+        <View style={styles.storiesSection}>
+          <View style={styles.storiesList}>
+            {associatedStories.map((story) => (
+              <View key={story.id} style={styles.storyCard}>
+                <StoryCard
+                  story={story}
+                  keywords={keywords}
+                  hideImage={false}
+                  hideAudio={false}
+                />
               </View>
             ))}
           </View>
         </View>
       )}
-
-      <StoryModal
-        story={selectedStory}
-        keywords={keywords}
-        visible={isStoryModalVisible}
-        onClose={() => {
-          if (mounted) {
-            setIsStoryModalVisible(false);
-            setSelectedStory(null);
-          }
-        }}
-      />
     </ScrollView>
   );
 }
@@ -412,18 +296,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  card: {
-    backgroundColor: theme.colors.gray[50],
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing.xl,
-    width: '100%',
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.lg,
+    backgroundColor: theme.colors.gray[50],
+    borderRadius: theme.borderRadius.lg,
   },
-  audioContainer: {
-    marginBottom: theme.spacing.md,
+  phraseContainer: {
+    flex: 1,
+    alignItems: 'center',
+    gap: theme.spacing.md,
   },
-  audioButton: {
+  phraseText: {
+    ...theme.typography.heading1,
+    color: theme.colors.gray[900],
+  },
+  translationText: {
+    ...theme.typography.body1,
+    color: theme.colors.gray[500],
+  },
+  playButton: {
     width: 56,
     height: 56,
     borderRadius: theme.borderRadius.md,
@@ -431,81 +325,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  audioButtonActive: {
+  playButtonActive: {
     backgroundColor: theme.colors.gray[900],
   },
-  audioButtonError: {
-    backgroundColor: theme.colors.error[50],
+  storiesSection: {
+    paddingTop: theme.spacing.xl,
   },
-  targetText: {
-    ...theme.typography.heading1,
+  sectionTitle: {
+    ...theme.typography.heading2,
     color: theme.colors.gray[900],
-    textAlign: 'center',
+    marginBottom: theme.spacing.md,
   },
-  nativeText: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[500],
-    textAlign: 'center',
-  },
-  loadingContainer: {
-    padding: theme.spacing.lg,
-    alignItems: 'center',
-  },
-  loadingText: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[500],
-  },
-  errorContainer: {
-    padding: theme.spacing.lg,
-    alignItems: 'center',
-  },
-  errorText: {
-    ...theme.typography.body1,
-    color: theme.colors.error[500],
-  },
-  examplesSection: {
-    marginTop: theme.spacing.lg,
-  },
-  examplesList: {
+  storiesList: {
     gap: theme.spacing.md,
   },
-  exampleCard: {
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: theme.colors.gray[200],
-  },
-  storyImage: {
-    width: '100%',
-    height: 160,
-    backgroundColor: theme.colors.gray[100],
-  },
-  exampleContent: {
-    padding: theme.spacing.md,
-  },
-  exampleText: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[900],
-    marginBottom: theme.spacing.xs,
-  },
-  exampleTranslation: {
-    ...theme.typography.body2,
-    color: theme.colors.gray[500],
-    fontStyle: 'italic',
-    marginBottom: theme.spacing.lg,
-  },
-  readMoreButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.xs,
-    justifyContent: 'center',
-    paddingVertical: theme.spacing.sm,
-    backgroundColor: theme.colors.gray[50],
-    borderRadius: theme.borderRadius.md,
-  },
-  readMoreText: {
-    ...theme.typography.bodyBold,
-    color: theme.colors.gray[800],
+  storyCard: {
+    marginBottom: theme.spacing.md,
   },
 });
