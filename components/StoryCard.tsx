@@ -98,7 +98,6 @@ export function StoryCard({
   const { nativeLanguage, targetLanguage } = useLanguage();
   const { level } = useLevel();
   const { addPhrase, removePhrase, isPhraseSaved } = useSavedPhrases();
-  const { showTranslationsByDefault } = useSettings();
   const [selectedKeyword, setSelectedKeyword] = useState<{
     id: string;
     targetText: string;
@@ -106,9 +105,6 @@ export function StoryCard({
     audioUrl?: string;
   } | null>(null);
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
-  const [hideTranslations, setHideTranslations] = useState(
-    !showTranslationsByDefault
-  );
   const [isExplanationVisible, setIsExplanationVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -226,24 +222,6 @@ export function StoryCard({
             <AudioPlayer url={story.audioUrl} size={48} variant="primary" />
           )}
         </View>
-        {!hideActions && (
-          <View style={styles.headerRight}>
-            <Pressable
-              style={[
-                styles.actionButton,
-                hideTranslations && styles.actionButtonActive,
-              ]}
-              onPress={() => setHideTranslations(!hideTranslations)}
-            >
-              <Languages
-                size={20}
-                color={
-                  hideTranslations ? theme.colors.white : theme.colors.gray[500]
-                }
-              />
-            </Pressable>
-          </View>
-        )}
       </View>
 
       <View style={styles.storyContent}>
@@ -253,7 +231,6 @@ export function StoryCard({
             targetText={sentence}
             nativeText={nativeSentences[index] || ''}
             isShortStory={story.type === 'short'}
-            forceOpen={!hideTranslations}
           />
         ))}
       </View>
@@ -471,7 +448,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.gray[50],
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.md,
     alignSelf: 'baseline',
     margin: theme.spacing.md,
   },
