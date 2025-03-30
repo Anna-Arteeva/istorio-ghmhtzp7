@@ -264,7 +264,7 @@ export function useFeed() {
       
       // Log the first story's explanations for debugging
       if (distributedItems.length > 0) {
-        const firstStory = distributedItems.find(item => item.type !== 'keywords' && !('active_days' in item));
+        const firstStory = distributedItems.find(item => item.type !== 'keywords');
         console.log('First story explanations:', firstStory?.explanations_json);
       }
 

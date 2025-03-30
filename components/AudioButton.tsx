@@ -10,10 +10,10 @@ interface AudioButtonProps {
   variant?: 'primary' | 'secondary';
 }
 
-export function AudioButton({ 
-  url, 
+export function AudioButton({
+  url,
   size = 'small',
-  variant = 'secondary'
+  variant = 'secondary',
 }: AudioButtonProps) {
   const { play, isPlaying, isLoading, error } = useAudioPlayer(url);
 
@@ -24,9 +24,9 @@ export function AudioButton({
   }[size];
 
   const iconSize = {
-    small: 20,
-    medium: 24,
-    large: 24,
+    small: 16,
+    medium: 20,
+    large: 20,
   }[size];
 
   return (
@@ -42,14 +42,20 @@ export function AudioButton({
       disabled={isLoading}
     >
       {isLoading ? (
-        <ActivityIndicator 
-          size={iconSize} 
-          color={variant === 'primary' ? theme.colors.white : theme.colors.gray[500]} 
+        <ActivityIndicator
+          size={iconSize}
+          color={
+            variant === 'primary' ? theme.colors.white : theme.colors.gray[500]
+          }
         />
       ) : isPlaying ? (
-        <Pause 
-          size={iconSize} 
-          color={variant === 'primary' ? theme.colors.white : theme.colors.semiWhite[800]} 
+        <Pause
+          size={iconSize}
+          color={
+            variant === 'primary'
+              ? theme.colors.white
+              : theme.colors.semiWhite[800]
+          }
         />
       ) : (
         <Play

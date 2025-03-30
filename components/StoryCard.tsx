@@ -212,7 +212,7 @@ export function StoryCard({
           )}
         </View>
         <View style={styles.keywordActions}>
-          {audioUrl && <AudioPlayer url={audioUrl} />}
+          {audioUrl && <AudioPlayer size={36} url={audioUrl} />}
         </View>
       </View>
     );
@@ -268,7 +268,7 @@ export function StoryCard({
             onPress={toggleExplanation}
           >
             <FaceThinkingIcon
-              size={15}
+              size={14}
               color={
                 isExplanationVisible
                   ? theme.colors.white
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray[900],
   },
   storyContent: {
-    padding: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
   },
   keywords: {
     flexDirection: 'column',
@@ -463,31 +463,25 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   keywordActions: {
-    flexDirection: 'row',
-    gap: theme.spacing.xs,
     marginLeft: theme.spacing.sm,
   },
   decoderButton: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     gap: theme.spacing.sm,
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.gray[50],
     borderRadius: theme.borderRadius.full,
     alignSelf: 'baseline',
-    marginBottom: theme.spacing.lg,
-    marginHorizontal: theme.spacing.md,
+    margin: theme.spacing.md,
   },
   decoderButtonActive: {
     backgroundColor: theme.colors.gray[900],
   },
   decoderButtonText: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 14,
+    fontSize: 13,
     color: theme.colors.gray[500],
-    flex: 1,
   },
   decoderButtonTextActive: {
     color: theme.colors.white,
@@ -498,7 +492,7 @@ const styles = StyleSheet.create({
   },
   explanationText: {
     ...theme.typography.body1,
-    color: theme.colors.gray[800],
+    color: theme.colors.gray[600],
   },
 });
 
@@ -506,5 +500,4 @@ export { StoryCard };
 
 export { StoryCard };
 
-
-export { StoryCard }
+export { StoryCard };
