@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
 import { ExampleStory } from '@/components/ExampleStory';
+import { TranslatableSentence } from '@/components/TranslatableSentence';
 import { LANGUAGE_LEVELS } from '@/lib/constants';
 import { useViews } from '@/contexts/ViewContext';
 
@@ -30,21 +31,19 @@ const ADVANCED_LEVELS = ['B2', 'C1', 'C2'];
 
 export function InfoCard({ card, onPress }: InfoCardProps) {
   const { nativeLanguage, targetLanguage } = useLanguage();
-  const { level } = useLevel();
   const { recordView } = useViews();
+  const { level } = useLevel();
   
   // Record view when the card is rendered
   useEffect(() => {
     recordView(card.id, 'info_card');
   }, [card.id]);
 
-  // Determine which language to use based on user's level
-  const displayLanguage = ADVANCED_LEVELS.includes(level) ? targetLanguage : nativeLanguage;
+  // Get content in both target and native languages
+  const targetContent = card.content_json[targetLanguage] || card.content_json.en;
+  const nativeContent = card.content_json[nativeLanguage] || card.content_json.en;
   
-  // Get content in the appropriate language, fallback to English if not available
-  const content = card.content_json[displayLanguage] || card.content_json.en;
-  
-  if (!content) return null;
+  if (!targetContent || !nativeContent) return null;
 
   const isCultureCard = card.type === 'culture';
   const isTipCard = card.type === 'tip';
@@ -83,38 +82,63 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
             <Text style={styles.brandText}>Istorio</Text>
           </View>
         )}
-
+        
         {isTipCard && (
           <View style={styles.tipBadge}>
             <Text style={styles.tipBadgeText}>Pro Tip</Text>
           </View>
         )}
 
-
-        <Text style={[
-          styles.title,
-          isCultureCard && styles.cultureTitle,
-          isTipCard && styles.tipTitle,
-          isProgressCard && styles.progressTitle
-        ]}>
-          {content.title}
-        </Text>
+        <View style={styles.titleContainer}>
+          <TranslatableSentence
+            targetText={targetContent.title}
+            nativeText={nativeContent.title}
+            isShortStory={false}
+            customStyles={{
+              target: [
+                styles.title,
+                isCultureCard && styles.cultureTitle,
+                isTipCard && styles.tipTitle,
+                isProgressCard && styles.progressTitle
+              ],
+              native: [
+                styles.titleTranslation,
+                isCultureCard && styles.cultureTitleTranslation,
+                isTipCard && styles.tipTitleTranslation,
+                isProgressCard && styles.progressTitleTranslation
+              ]
+            }}
+          />
+        </View>
         
-        <Text style={[
-          styles.description,
-          isCultureCard && styles.cultureDescription,
-          isTipCard && styles.tipDescription,
-          isProgressCard && styles.progressDescription
-        ]}>
-          {content.description}
-        </Text>
+        <View style={styles.descriptionContainer}>
+          <TranslatableSentence
+            targetText={targetContent.description}
+            nativeText={nativeContent.description}
+            isShortStory={false}
+            customStyles={{
+              target: [
+                styles.description,
+                isCultureCard && styles.cultureDescription,
+                isTipCard && styles.tipDescription,
+                isProgressCard && styles.progressDescription
+              ],
+              native: [
+                styles.descriptionTranslation,
+                isCultureCard && styles.cultureDescriptionTranslation,
+                isTipCard && styles.tipDescriptionTranslation,
+                isProgressCard && styles.progressDescriptionTranslation
+              ]
+            }}
+          />
+        </View>
 
-        {content.quote && (
+        {targetContent.quote && (
           <View style={styles.quoteContainer}>
             <View style={styles.quoteBadge}>
               <Text style={styles.quoteBadgeText}>{targetLanguage.toUpperCase()}</Text>
             </View>
-            <Text style={styles.quoteText}>{content.quote}</Text>
+            <Text style={styles.quoteText}>{targetContent.quote}</Text>
           </View>
         )}
         
@@ -230,17 +254,51 @@ const styles = StyleSheet.create({
   tipTitle: {
     color: theme.colors.gray[900],
   },
+  titleContainer: {
+    marginBottom: theme.spacing.md,
+  },
+  titleTranslation: {
+    ...theme.typography.body1,
+    color: theme.colors.gray[500],
+    marginTop: theme.spacing.xs,
+  },
+  cultureTitleTranslation: {
+    color: theme.colors.semiWhite[600],
+  },
+  tipTitleTranslation: {
+    color: theme.colors.gray[500],
+  },
+  progressTitleTranslation: {
+    color: theme.colors.gray[500],
+  },
+  descriptionContainer: {
+    marginBottom: theme.spacing.lg,
+  },
   description: {
     ...theme.typography.bodyLead,
   },
+  descriptionTranslation: {
+    ...theme.typography.body1,
+    color: theme.colors.gray[500],
+    marginTop: theme.spacing.xs,
+  },
   progressDescription: {
     color: theme.colors.gray[800],
+  },
+  progressDescriptionTranslation: {
+    color: theme.colors.gray[500],
   },
   cultureDescription: {
     color: theme.colors.white,
     opacity: 0.8,
   },
+  cultureDescriptionTranslation: {
+    color: theme.colors.semiWhite[600],
+  },
   tipDescription: {
     color: theme.colors.gray[700],
+  },
+  tipDescriptionTranslation: {
+    color: theme.colors.gray[500],
   },
 });

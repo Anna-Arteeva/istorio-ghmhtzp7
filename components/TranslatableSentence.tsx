@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { theme } from '@/theme';
+import { useLevel } from '@/contexts/LevelContext';
+import { type LanguageLevel } from '@/lib/constants';
 
 interface TranslatableSentenceProps {
   targetText: string;
@@ -8,19 +10,31 @@ interface TranslatableSentenceProps {
   showTranslateText?: boolean;
   isShortStory?: boolean;
   forceOpen?: boolean;
+  customStyles?: {
+    target?: any[];
+    native?: any[];
+  };
 }
+
+const ADVANCED_LEVELS: LanguageLevel[] = ['B2', 'C1', 'C2'];
 
 export function TranslatableSentence({
   targetText,
   nativeText,
   isShortStory = false,
   forceOpen = false,
+  customStyles
 }: TranslatableSentenceProps) {
-  const [isOpen, setIsOpen] = useState(forceOpen);
+  const { level } = useLevel();
+  const isAdvancedLevel = ADVANCED_LEVELS.includes(level);
+  const [isOpen, setIsOpen] = useState(true);
   
   // Update state when forceOpen prop changes
   useEffect(() => {
-    setIsOpen(forceOpen);
+    // Only allow forceOpen to close the translation
+    if (!forceOpen) {
+      setIsOpen(false);
+    }
   }, [forceOpen]);
 
   const handlePress = () => {
@@ -29,14 +43,17 @@ export function TranslatableSentence({
   };
 
   const renderContent = () => {
+    const primaryText = isAdvancedLevel ? targetText : nativeText;
+    const secondaryText = isAdvancedLevel ? nativeText : targetText;
+
     return (
       <>
-        <Text style={isShortStory ? styles.shortStoryText : styles.targetText}>
-          {targetText}
+        <Text style={customStyles?.target || (isShortStory ? styles.shortStoryText : styles.targetText)}>
+          {primaryText}
         </Text>
         {isOpen && (
           <View style={styles.translationContainer}>
-            <Text style={styles.nativeText}>{nativeText}</Text>
+            <Text style={customStyles?.native || styles.nativeText}>{secondaryText}</Text>
           </View>
         )}
       </>
