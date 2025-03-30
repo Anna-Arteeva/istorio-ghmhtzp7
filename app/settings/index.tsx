@@ -16,24 +16,32 @@ export default function SettingsScreen() {
   const { nativeLanguage, targetLanguage, resetOnboarding } = useLanguage();
   const { level } = useLevel();
   const { firstVisit } = useVisits();
-  const { showTranslationsByDefault, setShowTranslationsByDefault } = useSettings();
+  const { 
+    showTranslationsByDefault, 
+    setShowTranslationsByDefault,
+    themePreference,
+    setThemePreference,
+  } = useSettings();
   const [hasChanges, setHasChanges] = useState(false);
   const [initialSettings, setInitialSettings] = useState({
     showTranslationsByDefault: showTranslationsByDefault,
+    themePreference: themePreference,
   });
 
   useEffect(() => {
     setInitialSettings({
       showTranslationsByDefault,
+      themePreference,
     });
   }, []);
 
   useEffect(() => {
     const settingsChanged = 
-      initialSettings.showTranslationsByDefault !== showTranslationsByDefault;
+      initialSettings.showTranslationsByDefault !== showTranslationsByDefault ||
+      initialSettings.themePreference !== themePreference;
     
     setHasChanges(settingsChanged);
-  }, [showTranslationsByDefault, initialSettings]);
+  }, [showTranslationsByDefault, themePreference, initialSettings]);
 
   const handleRestartOnboarding = async () => {
     await resetOnboarding();
@@ -42,6 +50,24 @@ export default function SettingsScreen() {
 
   const toggleTranslations = async () => {
     await setShowTranslationsByDefault(!showTranslationsByDefault);
+  };
+
+  const cycleTheme = async () => {
+    const themes: Array<'system' | 'light' | 'dark'> = ['system', 'light', 'dark'];
+    const currentIndex = themes.indexOf(themePreference);
+    const nextTheme = themes[(currentIndex + 1) % themes.length];
+    await setThemePreference(nextTheme);
+  };
+
+  const getThemeLabel = (theme: 'system' | 'light' | 'dark') => {
+    switch (theme) {
+      case 'system':
+        return t('settings.app.theme.system');
+      case 'light':
+        return t('settings.app.theme.light');
+      case 'dark':
+        return t('settings.app.theme.dark');
+    }
   };
 
   const handleApply = () => {
@@ -89,6 +115,11 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
+        <SettingsItem
+          label={t('settings.app.theme.title')}
+          value={getThemeLabel(themePreference)}
+          onPress={cycleTheme}
+        />
         <SettingsItem
           label={t('settings.app.translations.title')}
           value={showTranslationsByDefault ? t('settings.app.translations.on') : t('settings.app.translations.off')}

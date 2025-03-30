@@ -1,19 +1,28 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme } from 'react-native';
+
+type ThemePreference = 'system' | 'light' | 'dark';
 
 interface SettingsContextType {
   showTranslationsByDefault: boolean;
   setShowTranslationsByDefault: (value: boolean) => Promise<void>;
+  themePreference: ThemePreference;
+  setThemePreference: (value: ThemePreference) => Promise<void>;
+  currentTheme: 'light' | 'dark';
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
   SHOW_TRANSLATIONS: '@settings_show_translations',
+  THEME_PREFERENCE: '@settings_theme_preference',
 };
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
+  const systemColorScheme = useColorScheme();
   const [showTranslationsByDefault, setShowTranslationsByDefaultState] = useState(true);
+  const [themePreference, setThemePreferenceState] = useState<ThemePreference>('system');
 
   useEffect(() => {
     loadSettings();
@@ -21,9 +30,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   async function loadSettings() {
     try {
-      const storedValue = await AsyncStorage.getItem(STORAGE_KEYS.SHOW_TRANSLATIONS);
-      if (storedValue !== null) {
-        setShowTranslationsByDefaultState(storedValue === 'true');
+      const [translationsValue, themeValue] = await Promise.all([
+        AsyncStorage.getItem(STORAGE_KEYS.SHOW_TRANSLATIONS),
+        AsyncStorage.getItem(STORAGE_KEYS.THEME_PREFERENCE),
+      ]);
+
+      if (translationsValue !== null) {
+        setShowTranslationsByDefaultState(translationsValue === 'true');
+      }
+      
+      if (themeValue !== null) {
+        setThemePreferenceState(themeValue as ThemePreference);
       }
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -39,11 +56,28 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function setThemePreference(value: ThemePreference) {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.THEME_PREFERENCE, value);
+      setThemePreferenceState(value);
+    } catch (error) {
+      console.error('Error saving theme preference:', error);
+    }
+  }
+
+  // Determine the current theme based on preference and system setting
+  const currentTheme = themePreference === 'system' 
+    ? (systemColorScheme || 'light')
+    : themePreference;
+
   return (
     <SettingsContext.Provider
       value={{
         showTranslationsByDefault,
         setShowTranslationsByDefault,
+        themePreference,
+        setThemePreference,
+        currentTheme,
       }}>
       {children}
     </SettingsContext.Provider>
