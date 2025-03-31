@@ -7,6 +7,7 @@ import { ExampleStory } from '@/components/ExampleStory';
 import { TranslatableSentence } from '@/components/TranslatableSentence';
 import { LANGUAGE_LEVELS } from '@/lib/constants';
 import { useViews } from '@/contexts/ViewContext';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface InfoCardContent {
   title: string;
@@ -34,6 +35,7 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
   const { nativeLanguage, targetLanguage } = useLanguage();
   const { recordView } = useViews();
   const { level } = useLevel();
+  const { showTranslationsByDefault } = useSettings();
   
   // Record view when the card is rendered
   useEffect(() => {
@@ -97,26 +99,12 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
         )}
 
         <View style={styles.titleContainer}>
-          <TranslatableSentence
-            targetText={targetContent.title}
-            nativeText={nativeContent.title}
-            isShortStory={false}
-            isInfoCard={true}
-            customStyles={{
-              target: [
-                styles.title,
-                isCultureCard && [styles.cultureTitle, { color: currentTheme.colors.white }],
-                isTipCard && [styles.tipTitle, { color: currentTheme.colors.gray[900] }],
-                isProgressCard && [styles.progressTitle, { color: currentTheme.colors.gray[900] }]
-              ],
-              native: [
-                styles.titleTranslation,
-                isCultureCard && [styles.cultureTitleTranslation, { color: currentTheme.colors.gray[300] }],
-                isTipCard && [styles.tipTitleTranslation, { color: currentTheme.colors.gray[500] }],
-                isProgressCard && [styles.progressTitleTranslation, { color: currentTheme.colors.gray[500] }]
-              ]
-            }}
-          />
+          <Text style={[styles.title, { color: currentTheme.colors.gray[900] }]}>
+            {targetContent.title}
+          </Text>
+          <Text style={[styles.nativeTitle, { color: currentTheme.colors.gray[500] }]}>
+            {nativeContent.title}
+          </Text>
         </View>
         
         <View style={styles.descriptionContainer}>
@@ -125,6 +113,7 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
             nativeText={nativeContent.description}
             isShortStory={false}
             isInfoCard={true}
+            forceOpen={showTranslationsByDefault}
             customStyles={{
               target: [
                 styles.description,
@@ -235,28 +224,25 @@ const styles = StyleSheet.create({
     ...theme.typography.body1,
     marginTop: theme.spacing.sm,
   },
-  title: {
-    ...theme.typography.heading1,
-    marginBottom: theme.spacing.md,
-    marginTop: theme.spacing.sm,
+  titleContainer: {
+    gap: theme.spacing.xs,
   },
-  titleTranslation: {
-    ...theme.typography.body1,
+  title: {
+    ...theme.typography.heading2,
+  },
+  nativeTitle: {
+    ...theme.typography.body,
+    marginBottom: theme.spacing.md,
+  },
+  descriptionContainer: {
     marginBottom: theme.spacing.md,
   },
   description: {
-    ...theme.typography.body1,
-    marginBottom: theme.spacing.md,
+    ...theme.typography.bodyLead,
   },
   descriptionTranslation: {
     ...theme.typography.body2,
     marginBottom: theme.spacing.md,
-  },
-  cultureTitle: {
-    color: theme.colors.white,
-  },
-  cultureTitleTranslation: {
-    color: theme.colors.gray[300],
   },
   cultureDescription: {
     color: theme.colors.white,
@@ -264,22 +250,10 @@ const styles = StyleSheet.create({
   cultureDescriptionTranslation: {
     color: theme.colors.gray[300],
   },
-  tipTitle: {
-    color: theme.colors.gray[900],
-  },
-  tipTitleTranslation: {
-    color: theme.colors.gray[500],
-  },
   tipDescription: {
     color: theme.colors.gray[900],
   },
   tipDescriptionTranslation: {
-    color: theme.colors.gray[500],
-  },
-  progressTitle: {
-    color: theme.colors.gray[900],
-  },
-  progressTitleTranslation: {
     color: theme.colors.gray[500],
   },
   progressDescription: {

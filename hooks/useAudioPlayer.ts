@@ -75,6 +75,7 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
         }
       }
       setCurrentSound(null);
+      setError(null);
     } catch (error) {
       console.error('Stop error:', error);
       setError('Failed to stop audio');
@@ -83,6 +84,9 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
 
   const updatePlaybackState = (playing: boolean) => {
     setIsPlaying(playing);
+    if (playing) {
+      setError(null);
+    }
     options.onPlaybackStateChange?.(playing);
   };
 
