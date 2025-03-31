@@ -36,7 +36,7 @@ export function AudioPlayer({
       }[size]
     : size;
 
-  const buttonStyle = [
+  const buttonStyle = StyleSheet.flatten([
     styles.button,
     size === 'small' && styles.smallButton,
     size === 'medium' && styles.mediumButton,
@@ -49,7 +49,7 @@ export function AudioPlayer({
       styles.secondaryButton,
     ],
     error && styles.errorButton,
-  ];
+  ]);
 
   const iconColor = variant === 'primary' 
     ? currentTheme.colors.white 
