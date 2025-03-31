@@ -98,18 +98,18 @@ export function ExampleStory() {
           position={{ top: -16, left: 16 }}
         />
         
-        {/* Translate story badge - Top Right */}
+        {/* Translate story badge - Top Right 
         <HelpBadge 
           text={t('example.translateStory')}
           type="topRight"
           position={{ top: 63, right: 53 }}
-        />
+        />*/}
         
         {/* Translate sentence badge - Top Right */}
         <HelpBadge 
           text={t('example.translate')}
-          type="topRight"
-          position={{ bottom: 220, left: -28 }}
+          type="bottomLeft"
+          position={{ top: 50, right: 16 }}
         />
       
         {/* Learn phrases badge - Bottom Left */}
@@ -119,12 +119,12 @@ export function ExampleStory() {
           position={{ bottom: 142, left: -8 }}
         />
         
-        {/* Save for practice badge - Bottom Right */}
+        {/* Save for practice badge - Bottom Right 
         <HelpBadge 
           text={t('example.save')}
           type="topRight"
           position={{ bottom: 8, right: 16 }}
-        />
+        />*/}
 
         <StoryCard 
           story={story}
@@ -139,7 +139,7 @@ export function ExampleStory() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
+    marginTop: 25,
     marginLeft: -8,
     marginRight: -8,
     marginBottom: -16,

@@ -70,7 +70,7 @@ const baseTheme = {
     bodyLead: {
       fontFamily: 'Montserrat-Regular',
       fontSize: 18,
-      lineHeight: 24,
+      lineHeight: 28,
     },
     bodyShortStory: {
       fontFamily: 'Montserrat-ExtraBold',
@@ -116,24 +116,28 @@ const baseTheme = {
 
 // Light theme colors (current theme)
 const lightColors = {
+  white: '#FFFFFF',
+  pageBackground: '#F8F8F8',
+  cardBackground: '#FFFFFF',
+  
   primary: {
-    50: 'rgba(222, 246, 168, 0.20)', // very light green
-    100: 'rgba(222, 246, 168, 1)', // light green
-    500: 'rgba(26, 27, 48, 1)', // dark gray
-    600: '#4F46E5',
-    700: '#7A9F00',
+    50:  'rgba(18, 177, 198, 0.2)', // very light green
+    100: 'rgba(104, 212, 249, 1)', // light green
+    500: 'rgba(18, 177, 198, 1)', // dark gray
+    600: 'rgba(18, 177, 198, 1)',
+    700: 'rgba(0, 72, 85, 1)',
   },
   gray: {
-    50: 'rgba(26, 27, 48, 0.05)', // background
-    100: 'rgba(26, 27, 48, 0.1)',
-    200: 'rgba(26, 27, 48, 0.12)', // outline
-    300: 'rgba(26, 27, 48, 0.3)',
-    400: 'rgba(26, 27, 48, 0.5)',
-    500: 'rgba(27, 28, 50, 0.65)', // secondary color
-    600: 'rgba(26, 27, 48, 0.7)',
-    700: 'rgba(26, 27, 48, 0.8)',
-    800: 'rgba(26, 27, 48, 0.9)', // text
-    900: 'rgba(26, 27, 48, 1)',
+    50:  'rgba(29, 29, 34, 0.05)', // background
+    100: 'rgba(29, 29, 34, 0.1)',
+    200: 'rgba(29, 29, 34, 0.12)', // outline
+    300: 'rgba(29, 29, 34, 0.3)',
+    400: 'rgba(29, 29, 34, 0.5)',
+    500: 'rgba(29, 29, 34, 0.65)', // secondary color
+    600: 'rgba(29, 29, 34, 0.7)',
+    700: 'rgba(29, 29, 34, 0.8)',
+    800: 'rgba(29, 29, 34, 0.9)', // text
+    900: 'rgba(29, 29, 34, 1)',
   },
   error: {
     50: '#FEF2F2',
@@ -157,24 +161,31 @@ const lightColors = {
   pageBackground: '#F8F8F8',
   cardBackground: '#FFFFFF',
   playBackground: 'rgba(255, 255, 255, 0.05)',
+  
   gradients: {
-    cyan: 'rgba(143, 239, 252, 0.8)',
-    blue: 'rgba(104, 212, 249, 0.8)',
-    pink: 'rgba(255, 199, 238, 0.8)',
-    rose: 'rgba(246, 164, 235, 0.8)',
-    lime: 'rgba(222, 246, 168, 0.8)',
+    cyan: 'rgba(143, 239, 252, 1)',
+    blue: 'rgba(104, 212, 249, 1)',
+    pink: 'rgba(255, 199, 238, 1)',
+    rose: 'rgba(246, 164, 235, 1)',
+    lime: 'rgba(222, 246, 168, 1)',
+    lila: 'rgba(132, 151, 247, 1)',
   },
 
 } as const;
 
 // Dark theme colors
 const darkColors = {
+
+  white: 'rgba(29, 29, 34, 1)', // Dark mode background
+  pageBackground: 'rgba(17, 17, 22, 1)',
+  cardBackground: 'rgba(29, 29, 34, 1)',
+
   primary: {
-    50: 'rgba(222, 246, 168, 0.10)', // darker very light green
-    100: 'rgba(222, 246, 168, 0.8)', // darker light green
-    500: '#9DCC00', // light green for contrast
-    600: '#6D64FF', // lighter purple
-    700: '#96C400', // lighter green
+    50:  'rgba(18, 177, 198, 0.2)', // very light green
+    100: 'rgba(104, 212, 249, 1)', // light green
+    500: 'rgba(18, 177, 198, 1)', // dark gray
+    600: 'rgba(18, 177, 198, 1)',
+    700: 'rgba(0, 72, 85, 1)',
   },
   gray: {
     50: 'rgba(255, 255, 255, 0.05)', // dark background
@@ -195,27 +206,24 @@ const darkColors = {
     600: '#FF6B6B',
   },
   semiWhite: {
-    50: 'rgba(0, 0, 0, 0.05)',
-    100: 'rgba(0, 0, 0, 0.1)',
-    200: 'rgba(0, 0, 0, 0.2)',
-    300: 'rgba(0, 0, 0, 0.3)',
-    400: 'rgba(0, 0, 0, 0.4)',
-    500: 'rgba(0, 0, 0, 0.5)',
-    600: 'rgba(0, 0, 0, 0.6)',
-    700: 'rgba(0, 0, 0, 0.7)',
-    800: 'rgba(0, 0, 0, 0.8)',
-    900: 'rgba(0, 0, 0, 0.9)',
+    50:  'rgba(29, 29, 34, 0.05)', // background
+    100: 'rgba(29, 29, 34, 0.1)',
+    200: 'rgba(29, 29, 34, 0.12)', // outline
+    300: 'rgba(29, 29, 34, 0.3)',
+    400: 'rgba(29, 29, 34, 0.5)',
+    500: 'rgba(29, 29, 34, 0.65)', // secondary color
+    600: 'rgba(29, 29, 34, 0.7)',
+    700: 'rgba(29, 29, 34, 0.8)',
+    800: 'rgba(29, 29, 34, 0.9)', // text
+    900: 'rgba(29, 29, 34, 1)',
   },
-  white: '#171722', // Dark mode background
-  pageBackground: '#111116',
-  cardBackground: 'rgba(255, 255, 255, 0.05)',
-  playBackground: 'rgba(255, 255, 255, 0.05)',
   gradients: {
-    cyan: '#00323F',
-    blue: '#00163F',
-    pink: '#410934',
-    rose: '#380031',
-    lime: '#1D3800',
+    cyan: 'rgba(3, 54, 66, 1)',
+    blue: 'rgba(0, 30, 69, 1)',
+    pink: 'rgba(65, 0, 43, 1)',
+    rose: 'rgba(65, 0, 0, 1)',
+    lime: 'rgba(0, 65, 0, 1)',
+    lila: 'rgba(24, 23, 90, 1)',
   },
 } as const;
 

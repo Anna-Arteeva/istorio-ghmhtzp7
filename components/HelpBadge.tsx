@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { X } from 'lucide-react-native';
+import { useTranslation } from '@/hooks/useTranslation';
 
 type BadgeType = 'topRight' | 'topLeft' | 'bottomRight' | 'bottomLeft';
 type BadgeVariant = 'floating' | 'static';
@@ -25,12 +26,14 @@ export function HelpBadge({
   position 
 }: HelpBadgeProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const currentTheme = useTheme();
+  const { t } = useTranslation();
 
   if (!isVisible) return null;
 
   const badgeContent = (
-    <View style={[styles.badge, styles[type]]}>
-      <Text style={styles.text}>{text}</Text>
+    <View style={[styles.badge, styles[type], { }]}>
+      <Text style={[styles.text, { backgroundColor: currentTheme.colors.primary[500], color: currentTheme.colors.white }]}>{text}</Text>
       {variant === 'floating' && (
         <Pressable 
           style={styles.closeButton}
@@ -54,7 +57,7 @@ export function HelpBadge({
   }
 
   return (
-    <View style={[styles.container, position]}>
+    <View style={[styles.container, position, { backgroundColor: currentTheme.colors.primary[500] }]}>
       {badgeContent}
     </View>
   );
@@ -76,7 +79,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: theme.spacing.xs,
-    backgroundColor: '#00ACBC',
     paddingVertical: theme.spacing.xs,
     paddingLeft: theme.spacing.sm,
     paddingRight: theme.spacing.sm,
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
    fontFamily: 'Montserrat-SemiBold',
    fontSize: 13,
    lineHeight: 16,
-    color: theme.colors.white,
+   borderRadius: theme.borderRadius.lg,
   },
   closeButton: {
     width: 20,
@@ -106,6 +108,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
   },
   bottomLeft: {
-    borderBottomLeftRadius: 0,
+    borderBottomLeftRadius: 0
   },
 });

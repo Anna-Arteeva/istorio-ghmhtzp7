@@ -166,8 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   phrase: {
-    ...theme.typography.body1,
-    marginBottom: theme.spacing.xs,
+    ...theme.typography.bodyBold,
   },
   translation: {
     ...theme.typography.body2,

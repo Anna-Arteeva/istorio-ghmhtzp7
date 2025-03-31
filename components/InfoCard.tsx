@@ -57,8 +57,8 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
     <Pressable 
       style={[
         styles.container,
-        isProgressCard && { backgroundColor: currentTheme.colors.primary[100] },
-        isCultureCard && { backgroundColor: currentTheme.colors.gray[200] },
+        isProgressCard && { backgroundColor: currentTheme.colors.gradients.cyan },
+        isCultureCard && { backgroundColor: currentTheme.colors.gradients.blue },
         isTipCard && { backgroundColor: currentTheme.colors.gray[100] }
       ]}
       onPress={onPress}
@@ -102,7 +102,7 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
           <Text style={[styles.title, { color: currentTheme.colors.gray[900] }]}>
             {targetContent.title}
           </Text>
-          <Text style={[styles.nativeTitle, { color: currentTheme.colors.gray[500] }]}>
+          <Text style={[styles.nativeTitle, { color: currentTheme.colors.gray[400] }]}>
             {nativeContent.title}
           </Text>
         </View>
@@ -117,15 +117,15 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
             customStyles={{
               target: [
                 styles.description,
-                isCultureCard && [styles.cultureDescription, { color: currentTheme.colors.white }],
+                isCultureCard && [styles.cultureDescription, { color: currentTheme.colors.gray[900] }],
                 isTipCard && [styles.tipDescription, { color: currentTheme.colors.gray[900] }],
                 isProgressCard && [styles.progressDescription, { color: currentTheme.colors.gray[900] }]
               ],
               native: [
                 styles.descriptionTranslation,
-                isCultureCard && [styles.cultureDescriptionTranslation, { color: currentTheme.colors.gray[300] }],
-                isTipCard && [styles.tipDescriptionTranslation, { color: currentTheme.colors.gray[500] }],
-                isProgressCard && [styles.progressDescriptionTranslation, { color: currentTheme.colors.gray[500] }]
+                isCultureCard && [styles.cultureDescriptionTranslation, { color: currentTheme.colors.gray[400] }],
+                isTipCard && [styles.tipDescriptionTranslation, { color: currentTheme.colors.gray[400] }],
+                isProgressCard && [styles.progressDescriptionTranslation, { color: currentTheme.colors.gray[400] }]
               ]
             }}
           />
@@ -228,10 +228,10 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   title: {
-    ...theme.typography.heading2,
+    ...theme.typography.heading1,
   },
   nativeTitle: {
-    ...theme.typography.body,
+    ...theme.typography.body1,
     marginBottom: theme.spacing.md,
   },
   descriptionContainer: {
@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
   },
   description: {
     ...theme.typography.bodyLead,
+    marginBottom: theme.spacing.sm,
   },
   descriptionTranslation: {
     ...theme.typography.body2,
