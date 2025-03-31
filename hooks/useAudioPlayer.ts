@@ -1,239 +1,113 @@
-import { useState, useEffect, useRef } from 'react';
-import { Platform } from 'react-native';
-import { Audio } from 'expo-av';
-import { useAudio } from '@/contexts/AudioContext';
+import React from 'react';
+import { Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+import { Play, Pause } from 'lucide-react-native';
+import { theme, useTheme } from '@/theme';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 
-interface AudioPlayerOptions {
+interface AudioPlayerProps {
+  url?: string;
+  size?: 'small' | 'medium' | 'large' | number;
+  variant?: 'primary' | 'secondary';
   onPlaybackStatusUpdate?: (status: any) => void;
   onPlaybackStateChange?: (isPlaying: boolean) => void;
 }
 
-export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [webAudio, setWebAudio] = useState<HTMLAudioElement | null>(null);
-  const loadingRef = useRef<boolean>(false);
-  const { currentSound, setCurrentSound, stopCurrentSound } = useAudio();
+export function AudioPlayer({ 
+  url, 
+  size = 'small',
+  variant = 'secondary',
+  onPlaybackStatusUpdate,
+  onPlaybackStateChange,
+}: AudioPlayerProps) {
+  const currentTheme = useTheme();
+  const { play, isPlaying, isLoading, error } = useAudioPlayer(url, {
+    onPlaybackStatusUpdate,
+    onPlaybackStateChange,
+  });
 
-  // Initialize Audio on mount
-  useEffect(() => {
-    if (Platform.OS !== 'web') {
-      Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
-      });
-    }
-  }, []);
+  if (!url) return null;
 
-  // Cleanup function
-  const cleanup = async () => {
-    try {
-      if (Platform.OS === 'web') {
-        if (webAudio) {
-          webAudio.pause();
-          webAudio.src = '';
-          setWebAudio(null);
-        }
-      } else {
-        if (sound) {
-          await sound.stopAsync();
-          await sound.unloadAsync();
-          setSound(null);
-        }
-      }
-      setIsPlaying(false);
-      setError(null);
-      setCurrentSound(null);
-    } catch (error) {
-      console.error('Cleanup error:', error);
-    }
-  };
+  // Handle both predefined sizes and custom numbers
+  const buttonSize = typeof size === 'string' 
+    ? {
+        small: 36,
+        medium: 48,
+        large: 56,
+      }[size]
+    : size;
 
-  // Cleanup on unmount or URL change
-  useEffect(() => {
-    return () => {
-      cleanup();
-    };
-  }, [url]);
+  const buttonStyle = [
+    styles.button,
+    size === 'small' && styles.smallButton,
+    size === 'medium' && styles.mediumButton,
+    variant === 'primary' && [
+      { backgroundColor: currentTheme.colors.gray[900] },
+      styles.primaryButton,
+    ],
+    variant === 'secondary' && [
+      { backgroundColor: currentTheme.colors.gray[50] },
+      styles.secondaryButton,
+    ],
+    error && styles.errorButton,
+  ];
 
-  const stop = async () => {
-    try {
-      if (Platform.OS === 'web') {
-        if (webAudio) {
-          webAudio.pause();
-          webAudio.currentTime = 0;
-          updatePlaybackState(false);
-        }
-      } else {
-        if (sound) {
-          await sound.stopAsync();
-          updatePlaybackState(false);
-        }
-      }
-      setCurrentSound(null);
-    } catch (error) {
-      console.error('Stop error:', error);
-      setError('Failed to stop audio');
-    }
-  };
+  const iconColor = variant === 'primary' 
+    ? currentTheme.colors.white 
+    : currentTheme.colors.gray[500];
 
-  const updatePlaybackState = (playing: boolean) => {
-    setIsPlaying(playing);
-    options.onPlaybackStateChange?.(playing);
-  };
+  const iconSize = size === 'small' ? 20 : size === 'medium' ? 24 : 28;
 
-  const loadAudio = async () => {
-    if (!url || loadingRef.current) return null;
-
-    try {
-      loadingRef.current = true;
-      setIsLoading(true);
-      setError(null);
-
-      await cleanup();
-
-      if (Platform.OS === 'web') {
-        const audio = new window.Audio();
-        
-        audio.addEventListener('ended', () => {
-          updatePlaybackState(false);
-          setCurrentSound(null);
-        });
-        
-        audio.addEventListener('error', () => {
-          setError('Failed to load audio');
-          updatePlaybackState(false);
-          setCurrentSound(null);
-        });
-        
-        audio.addEventListener('playing', () => {
-          updatePlaybackState(true);
-          setIsLoading(false);
-        });
-        
-        audio.addEventListener('pause', () => {
-          updatePlaybackState(false);
-        });
-
-        audio.addEventListener('loadeddata', () => {
-          setIsLoading(false);
-        });
-
-        audio.src = url;
-        await audio.load();
-        setWebAudio(audio);
-        return audio;
-      } else {
-        const { sound: newSound } = await Audio.Sound.createAsync(
-          { uri: url },
-          { 
-            shouldPlay: false,
-            progressUpdateIntervalMillis: 100,
-          },
-          (status) => {
-            if (status.isLoaded) {
-              options.onPlaybackStatusUpdate?.(status);
-              updatePlaybackState(status.isPlaying);
-              
-              if (status.didJustFinish) {
-                updatePlaybackState(false);
-                setCurrentSound(null);
-              }
-            }
-          }
-        );
-
-        setSound(newSound);
-        setIsLoading(false);
-        return newSound;
-      }
-    } catch (err) {
-      console.error('Load error:', err);
-      setError('Failed to load audio');
-      setIsLoading(false);
-      return null;
-    } finally {
-      loadingRef.current = false;
-    }
-  };
-
-  const play = async () => {
-    if (!url) return;
-
-    try {
-      setError(null);
-
-      // If already playing, pause
-      if (isPlaying) {
-        if (Platform.OS === 'web') {
-          if (webAudio) {
-            webAudio.pause();
-            updatePlaybackState(false);
-            setCurrentSound(null);
-          }
-        } else {
-          if (sound) {
-            await sound.pauseAsync();
-            updatePlaybackState(false);
-            setCurrentSound(null);
-          }
-        }
-        return;
-      }
-
-      // Stop any other playing audio
-      await stopCurrentSound();
-
-      setIsLoading(true);
-
-      let audioToPlay;
-      
-      // Load audio if not loaded
-      if (Platform.OS === 'web' ? !webAudio : !sound) {
-        audioToPlay = await loadAudio();
-      } else {
-        audioToPlay = Platform.OS === 'web' ? webAudio : sound;
-      }
-
-      if (!audioToPlay) {
-        throw new Error('Failed to load audio');
-      }
-
-      // Play the audio
-      if (Platform.OS === 'web') {
-        try {
-          const playPromise = (audioToPlay as HTMLAudioElement).play();
-          if (playPromise !== undefined) {
-            await playPromise;
-            updatePlaybackState(true);
-            setCurrentSound(audioToPlay);
-          }
-        } catch (error) {
-          console.error('Web audio play error:', error);
-          throw error;
-        }
-      } else {
-        await (audioToPlay as Audio.Sound).playFromPositionAsync(0);
-        updatePlaybackState(true);
-        setCurrentSound(audioToPlay);
-      }
-    } catch (err) {
-      console.error('Play error:', err);
-      setError('Failed to play audio');
-      updatePlaybackState(false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return {
-    play,
-    stop,
-    isPlaying,
-    isLoading,
-    error,
-  };
+  return (
+    <Pressable
+      style={buttonStyle}
+      onPress={play}
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <ActivityIndicator 
+          size={iconSize} 
+          color={iconColor} 
+        />
+      ) : isPlaying ? (
+        <Pause 
+          size={iconSize} 
+          color={iconColor} 
+        />
+      ) : (
+        <Play
+          size={iconSize}
+          color={iconColor}
+        />
+      )}
+    </Pressable>
+  );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: theme.borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.gray[50],
+  },
+  primaryButton: {
+
+  },
+  secondaryButton: {
+    backgroundColor: theme.colors.gray[50],
+  },
+  errorButton: {
+    backgroundColor: theme.colors.gray[500],
+  },
+  smallButton: {
+    width: 36,
+    height: 36,
+  },
+  mediumButton: {
+    width: 48,
+    height: 48,
+  },
+  disabledButton: {
+    backgroundColor: theme.colors.gray[200],
+  },
+});

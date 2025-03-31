@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 
 interface TranslatableSentenceProps {
   targetText: string;
@@ -23,6 +23,7 @@ export function TranslatableSentence({
   isInfoCard = false,
   customStyles
 }: TranslatableSentenceProps) {
+  const currentTheme = useTheme();
   const [isOpen, setIsOpen] = useState(true);
   
   // Update state when forceOpen prop changes
@@ -45,12 +46,24 @@ export function TranslatableSentence({
 
     return (
       <>
-        <Text style={customStyles?.target || (isShortStory ? styles.shortStoryText : styles.targetText)}>
+        <Text 
+          style={[
+            customStyles?.target || (isShortStory ? styles.shortStoryText : styles.targetText),
+            { color: currentTheme.colors.gray[900] }
+          ]}
+        >
           {primaryText}
         </Text>
         {isOpen && (
           <View style={styles.translationContainer}>
-            <Text style={customStyles?.native || styles.nativeText}>{secondaryText}</Text>
+            <Text 
+              style={[
+                customStyles?.native || styles.nativeText,
+                { color: currentTheme.colors.gray[500] }
+              ]}
+            >
+              {secondaryText}
+            </Text>
           </View>
         )}
       </>
@@ -90,12 +103,10 @@ const styles = StyleSheet.create({
   },
   targetText: {
     ...theme.typography.bodyLead,
-    color: theme.colors.gray[900],
     lineHeight: Platform.OS === 'web' ? 24 : 26,
   },
   shortStoryText: {
     ...theme.typography.bodyShortStory,
-    color: theme.colors.gray[900],
     lineHeight: Platform.OS === 'web' ? 32 : 34,
   },
   translationContainer: {
@@ -103,7 +114,6 @@ const styles = StyleSheet.create({
   },
   nativeText: {
     ...theme.typography.body2,
-    color: theme.colors.gray[500],
     lineHeight: Platform.OS === 'web' ? 18 : 20,
   },
 });

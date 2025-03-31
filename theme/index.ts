@@ -155,6 +155,16 @@ const lightColors = {
   },
   white: '#FFFFFF',
   pageBackground: '#F8F8F8',
+  cardBackground: '#FFFFFF',
+  playBackground: 'rgba(255, 255, 255, 0.05)',
+  gradients: {
+    cyan: 'rgba(143, 239, 252, 0.8)',
+    blue: 'rgba(104, 212, 249, 0.8)',
+    pink: 'rgba(255, 199, 238, 0.8)',
+    rose: 'rgba(246, 164, 235, 0.8)',
+    lime: 'rgba(222, 246, 168, 0.8)',
+  },
+
 } as const;
 
 // Dark theme colors
@@ -162,7 +172,7 @@ const darkColors = {
   primary: {
     50: 'rgba(222, 246, 168, 0.10)', // darker very light green
     100: 'rgba(222, 246, 168, 0.8)', // darker light green
-    500: 'rgba(222, 246, 168, 1)', // light green for contrast
+    500: '#9DCC00', // light green for contrast
     600: '#6D64FF', // lighter purple
     700: '#96C400', // lighter green
   },
@@ -196,8 +206,17 @@ const darkColors = {
     800: 'rgba(0, 0, 0, 0.8)',
     900: 'rgba(0, 0, 0, 0.9)',
   },
-  white: '#1A1B28', // Dark mode background
-  pageBackground: '#1A1B28',
+  white: '#171722', // Dark mode background
+  pageBackground: '#111116',
+  cardBackground: 'rgba(255, 255, 255, 0.05)',
+  playBackground: 'rgba(255, 255, 255, 0.05)',
+  gradients: {
+    cyan: '#00323F',
+    blue: '#00163F',
+    pink: '#410934',
+    rose: '#380031',
+    lime: '#1D3800',
+  },
 } as const;
 
 // Create the themes by combining base theme with colors

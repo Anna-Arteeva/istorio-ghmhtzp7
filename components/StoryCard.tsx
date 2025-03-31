@@ -19,7 +19,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useLevel } from '@/contexts/LevelContext';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FaceThinkingIcon } from '@/components/CustomIcons';
 import { Flashcard } from '@/components/Flashcard';
@@ -67,16 +67,14 @@ interface StoryCardProps {
   hideActions?: boolean;
 }
 
-const GRADIENT_COLORS = [
-  'rgba(143, 239, 252, 1)',
-  'rgba(104, 212, 249, 1)',
-  'rgba(255, 199, 238, 1)',
-  'rgba(246, 164, 235, 1)',
-  'rgba(222, 246, 168, 1)',
-];
-
-function getRandomGradient() {
-  const colors = [...GRADIENT_COLORS];
+function getRandomGradient(theme: any) {
+  const colors = [
+    theme.colors.gradients.cyan,
+    theme.colors.gradients.blue,
+    theme.colors.gradients.pink,
+    theme.colors.gradients.rose,
+    theme.colors.gradients.lime,
+  ];
   const firstIndex = Math.floor(Math.random() * colors.length);
   const firstColor = colors[firstIndex];
   colors.splice(firstIndex, 1);
@@ -109,6 +107,7 @@ export function StoryCard({
   const [areTranslationsVisible, setAreTranslationsVisible] = useState(showTranslationsByDefault);
   const [isExplanationVisible, setIsExplanationVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const currentTheme = useTheme();
 
   const targetContent = story?.content_json?.[targetLanguage];
   const nativeContent = story?.content_json?.[nativeLanguage];
@@ -122,7 +121,7 @@ export function StoryCard({
     [nativeContent]
   );
 
-  const gradientColors = useMemo(() => getRandomGradient(), [story.id]);
+  const gradientColors = useMemo(() => getRandomGradient(currentTheme), [story.id, currentTheme]);
 
   // Filter keywords to only show those matching user's exact level
   const filteredKeywords = useMemo(() => {
@@ -194,19 +193,23 @@ export function StoryCard({
     return (
       <View key={index} style={styles.keyword}>
         <Pressable
-          style={styles.actionButton}
+          style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}
           onPress={(event) => toggleSavePhrase(keywordId, event)}
         >
           {saved ? (
-            <Check size={20} color={theme.colors.gray[500]} />
+            <Check size={20} color={currentTheme.colors.gray[500]} />
           ) : (
-            <Plus size={20} color={theme.colors.gray[500]} />
+            <Plus size={20} color={currentTheme.colors.gray[500]} />
           )}
         </Pressable>
         <View style={styles.keywordTextContainer}>
-          <Text style={styles.keywordText}>{targetTranslation}</Text>
+          <Text style={[styles.keywordText, { color: currentTheme.colors.gray[800] }]}>
+            {targetTranslation}
+          </Text>
           {nativeTranslation && (
-            <Text style={styles.keywordTranslation}>{nativeTranslation}</Text>
+            <Text style={[styles.keywordTranslation, { color: currentTheme.colors.gray[500] }]}>
+              {nativeTranslation}
+            </Text>
           )}
         </View>
         <View style={styles.keywordActions}>
@@ -243,7 +246,8 @@ export function StoryCard({
           <Pressable
             style={[
               styles.decoderButton,
-              isExplanationVisible && styles.decoderButtonActive,
+              { backgroundColor: currentTheme.colors.gray[50] },
+              isExplanationVisible && { backgroundColor: currentTheme.colors.gray[900] },
             ]}
             onPress={toggleExplanation}
           >
@@ -251,14 +255,15 @@ export function StoryCard({
               size={14}
               color={
                 isExplanationVisible
-                  ? theme.colors.white
-                  : theme.colors.gray[500]
+                  ? currentTheme.colors.white
+                  : currentTheme.colors.gray[500]
               }
             />
             <Text
               style={[
                 styles.decoderButtonText,
-                isExplanationVisible && styles.decoderButtonTextActive,
+                { color: currentTheme.colors.gray[500] },
+                isExplanationVisible && { color: currentTheme.colors.white },
               ]}
             >
               {t('common.storyDecoder')}
@@ -266,7 +271,7 @@ export function StoryCard({
           </Pressable>
           {isExplanationVisible && (
             <View style={styles.explanationContainer}>
-              <Text style={styles.explanationText}>
+              <Text style={[styles.explanationText, { color: currentTheme.colors.gray[600] }]}>
                 {story.explanations_json[nativeLanguage]}
               </Text>
             </View>
@@ -275,7 +280,7 @@ export function StoryCard({
       )}
 
       {Object.keys(keywords).length > 0 && (
-        <View style={styles.keywords}>
+        <View style={[styles.keywords, { backgroundColor: currentTheme.colors.gray[50] }]}>
           {filteredKeywords.map((keywordId, index) =>
             renderKeyword(keywordId, index)
           )}
@@ -287,12 +292,12 @@ export function StoryCard({
   const cardStyle = Platform.select({
     ios: {
       ...styles.card,
-      shadowColor: theme.colors.gray[900],
+      shadowColor: currentTheme.colors.gray[900],
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 8,
       ...theme.shadows.lg,
-      borderColor: theme.colors.gray[200],
+      borderColor: currentTheme.colors.gray[200],
       borderWidth: 1,
     },
     android: {
@@ -308,7 +313,7 @@ export function StoryCard({
   const shortCardStyle = Platform.select({
     ios: {
       ...styles.shortCard,
-      shadowColor: theme.colors.gray[900],
+      shadowColor: currentTheme.colors.gray[900],
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 8,
@@ -338,9 +343,12 @@ export function StoryCard({
           {renderCardContent()}
         </LinearGradient>
       ) : (
-        <View style={cardStyle}>
+        <View style={[cardStyle, { backgroundColor: currentTheme.colors.cardBackground }]}>
           {!hideImage && story.imageUrl && (
-            <Image source={{ uri: story.imageUrl }} style={styles.coverImage} />
+            <Image 
+              source={{ uri: story.imageUrl }} 
+              style={[styles.coverImage, { backgroundColor: currentTheme.colors.gray[100] }]} 
+            />
           )}
           {renderCardContent()}
         </View>
@@ -358,7 +366,6 @@ export function StoryCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.xl,
     overflow: 'hidden',
     marginBottom: theme.spacing.md,
@@ -390,17 +397,14 @@ const styles = StyleSheet.create({
   coverImage: {
     width: '100%',
     height: 200,
-    backgroundColor: theme.colors.gray[100],
   },
   levelBadge: {
-    backgroundColor: theme.colors.gray[100],
     paddingHorizontal: theme.spacing.sm + 2,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
   },
   levelText: {
     ...theme.typography.caption,
-    color: theme.colors.gray[500],
   },
   actionButton: {
     width: 36,
@@ -408,7 +412,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.gray[50],
   },
   actionButtonActive: {
     backgroundColor: theme.colors.gray[900],
@@ -418,7 +421,6 @@ const styles = StyleSheet.create({
   },
   keywords: {
     flexDirection: 'column',
-    backgroundColor: theme.colors.gray[50],
     paddingHorizontal: theme.spacing.md,
     display: 'inline-block',
   },
@@ -435,12 +437,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Medium',
     fontSize: 14,
     lineHeight: 15,
-    color: theme.colors.gray[800],
   },
   keywordTranslation: {
     fontSize: 13,
     lineHeight: 16,
-    color: theme.colors.gray[500],
     marginTop: 2,
   },
   keywordActions: {
@@ -451,7 +451,6 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
-    backgroundColor: theme.colors.gray[50],
     borderRadius: theme.borderRadius.md,
     alignSelf: 'baseline',
     margin: theme.spacing.md,
@@ -462,7 +461,6 @@ const styles = StyleSheet.create({
   decoderButtonText: {
     fontFamily: 'Montserrat-SemiBold',
     fontSize: 13,
-    color: theme.colors.gray[500],
   },
   decoderButtonTextActive: {
     color: theme.colors.white,
@@ -474,12 +472,7 @@ const styles = StyleSheet.create({
   explanationText: {
     fontSize: 16,
     lineHeight: 24,
-    color: theme.colors.gray[600],
   },
 });
-
-export { StoryCard };
-
-export { StoryCard };
 
 export { StoryCard };

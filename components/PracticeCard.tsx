@@ -31,22 +31,46 @@ interface PracticeCardProps {
   onSoundLoaded?: (sound: any) => void;
   autoPlay?: boolean;
   onNavigate?: () => void;
+  onShare?: () => void;
+  hideAudio?: boolean;
+  hideActions?: boolean;
 }
 
-export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigate }: PracticeCardProps) {
+export function PracticeCard({
+  phrase,
+  onSoundLoaded,
+  autoPlay = true,
+  onNavigate,
+  onShare,
+  hideAudio = false,
+  hideActions = false,
+}: PracticeCardProps) {
   const currentTheme = useTheme();
   const { targetLanguage, nativeLanguage } = useLanguage();
-  const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
-  const [keywords, setKeywords] = useState<Record<string, any>>({});
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
+  const [keywords, setKeywords] = useState<Record<string, Keyword>>({});
+  const [sound, setSound] = useState<any>(null);
 
   useEffect(() => {
     setMounted(true);
     return () => {
       setMounted(false);
+      // Cleanup audio when component unmounts
+      if (sound) {
+        sound.unloadAsync();
+      }
     };
   }, []);
+
+  // Cleanup audio when phrase changes
+  useEffect(() => {
+    if (sound) {
+      sound.unloadAsync();
+      setSound(null);
+    }
+  }, [phrase.id]);
 
   useEffect(() => {
     if (mounted && phrase?.id) {
@@ -113,14 +137,15 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: currentTheme.colors.white }]}>
-      <View style={styles.content}>
+    <View style={[styles.container]}>
+      <ScrollView style={styles.content}>
         <View style={[styles.phraseContainer, { backgroundColor: currentTheme.colors.gray[50] }]}>
           {phrase?.audioUrl && (
             <AudioPlayer 
               url={phrase.audioUrl} 
               size="medium" 
               variant="primary"
+              autoPlay={autoPlay}
               onPlaybackStateChange={(isPlaying) => {
                 if (onSoundLoaded) {
                   onSoundLoaded(isPlaying);
@@ -155,7 +180,7 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -163,7 +188,6 @@ export function PracticeCard({ phrase, onSoundLoaded, autoPlay = true, onNavigat
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
   },
   content: {
@@ -176,6 +200,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.xl,
     gap: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
   },
   phraseContent: {
     alignItems: 'center',
@@ -191,7 +216,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   storiesSection: {
-    padding: theme.spacing.lg,
+    paddingVertical: theme.spacing.lg,
   },
   storiesList: {
     gap: theme.spacing.md,

@@ -41,7 +41,7 @@ export function AudioPlayer({
     size === 'small' && styles.smallButton,
     size === 'medium' && styles.mediumButton,
     variant === 'primary' && [
-      { backgroundColor: currentTheme.colors.primary[500] },
+      { backgroundColor: currentTheme.colors.gray[900] },
       styles.primaryButton,
     ],
     variant === 'secondary' && [
@@ -52,7 +52,7 @@ export function AudioPlayer({
   ];
 
   const iconColor = variant === 'primary' 
-    ? theme.colors.white 
+    ? currentTheme.colors.white 
     : currentTheme.colors.gray[500];
 
   const iconSize = size === 'small' ? 20 : size === 'medium' ? 24 : 28;
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray[50],
   },
   primaryButton: {
-    backgroundColor: theme.colors.gray[900],
+
   },
   secondaryButton: {
     backgroundColor: theme.colors.gray[50],

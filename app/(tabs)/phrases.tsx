@@ -85,6 +85,13 @@ export default function PhrasesScreen() {
       style={[styles.phraseCard, { backgroundColor: currentTheme.colors.white }]}
       onPress={() => handlePhrasePress(item)}
     >
+
+      <Pressable
+        style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}
+        onPress={() => handleRemovePhrase(item.id)}
+      >
+        <Trash2 size={20} color={currentTheme.colors.gray[400]} />
+      </Pressable>
       <View style={styles.phraseContent}>
         <Text style={[styles.phrase, { color: currentTheme.colors.gray[800] }]}>
           {item.targetText}
@@ -95,18 +102,12 @@ export default function PhrasesScreen() {
       </View>
       <View style={styles.actions}>
         {item.audioUrl && (
-          <AudioPlayer 
-            url={item.audioUrl} 
+          <AudioPlayer
+            url={item.audioUrl}
             size="small"
             variant="secondary"
           />
         )}
-        <Pressable
-          style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}
-          onPress={() => handleRemovePhrase(item.id)}
-        >
-          <Trash2 size={20} color={currentTheme.colors.gray[400]} />
-        </Pressable>
       </View>
     </Pressable>
   );
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     ...theme.shadows.lg,
+    gap: theme.spacing.md,
   },
   phraseContent: {
     flex: 1,
@@ -172,7 +174,6 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
-    gap: theme.spacing.xs,
   },
   actionButton: {
     width: 36,

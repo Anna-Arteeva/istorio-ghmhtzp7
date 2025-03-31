@@ -26,7 +26,6 @@ export default function PracticeScreen() {
   const { savedPhrases } = useSavedPhrases();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [phrasesWithTranslations, setPhrasesWithTranslations] = useState<PhraseWithTranslations[]>([]);
 
@@ -111,20 +110,7 @@ export default function PracticeScreen() {
     <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
       <View style={styles.contentWrapper}>
         <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <AudioPlayer 
-              url={currentPhrase?.audioUrl} 
-              size="medium"
-              variant="secondary"
-              onPlaybackStateChange={(isPlaying) => {
-                if (!isPlaying) {
-                  setIsMuted(true);
-                } else {
-                  setIsMuted(false);
-                }
-              }}
-            />
-          </View>
+          <View style={styles.headerLeft} />
           <View style={[styles.progress, { backgroundColor: currentTheme.colors.gray[50] }]}>
             <Text style={[styles.progressText, { color: currentTheme.colors.gray[500] }]}>
               {currentIndex + 1} of {phrasesWithTranslations.length}
@@ -141,7 +127,7 @@ export default function PracticeScreen() {
         <View style={styles.content}>
           <PracticeCard 
             phrase={currentPhrase}
-            autoPlay={!isMuted}
+            autoPlay={true}
           />
         </View>
 

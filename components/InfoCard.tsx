@@ -56,7 +56,7 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
       style={[
         styles.container,
         isProgressCard && { backgroundColor: currentTheme.colors.primary[100] },
-        isCultureCard && { backgroundColor: currentTheme.colors.gray[900] },
+        isCultureCard && { backgroundColor: currentTheme.colors.gray[200] },
         isTipCard && { backgroundColor: currentTheme.colors.gray[100] }
       ]}
       onPress={onPress}
