@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, Pressable, Modal, Platform, ScrollView, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ChevronLeft, ChevronRight, X, Volume2, VolumeX } from 'lucide-react-native';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react-native';
 import { theme, useTheme } from '@/theme';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';
 import { PracticeCard } from '@/components/PracticeCard';
-import { Audio } from 'expo-av';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabase';
+import { AudioPlayer } from '@/components/AudioPlayer';
 
 interface PhraseWithTranslations {
   id: string;
@@ -26,7 +26,6 @@ export default function PracticeScreen() {
   const { savedPhrases } = useSavedPhrases();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [phrasesWithTranslations, setPhrasesWithTranslations] = useState<PhraseWithTranslations[]>([]);
@@ -35,9 +34,6 @@ export default function PracticeScreen() {
     setMounted(true);
     return () => {
       setMounted(false);
-      if (sound) {
-        sound.unloadAsync();
-      }
     };
   }, []);
 
@@ -92,11 +88,6 @@ export default function PracticeScreen() {
     router.back();
   }, [mounted, router]);
 
-  const toggleMute = useCallback(() => {
-    if (!mounted) return;
-    setIsMuted(!isMuted);
-  }, [isMuted, mounted]);
-
   if (!phrasesWithTranslations.length) {
     return (
       <View style={[styles.container, { backgroundColor: currentTheme.colors.pageBackground }]}>
@@ -121,16 +112,18 @@ export default function PracticeScreen() {
       <View style={styles.contentWrapper}>
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Pressable 
-              style={[styles.muteButton, { backgroundColor: currentTheme.colors.gray[50] }]} 
-              onPress={toggleMute}
-            >
-              {isMuted ? (
-                <VolumeX size={24} color={currentTheme.colors.gray[900]} />
-              ) : (
-                <Volume2 size={24} color={currentTheme.colors.gray[900]} />
-              )}
-            </Pressable>
+            <AudioPlayer 
+              url={currentPhrase?.audioUrl} 
+              size="medium"
+              variant="secondary"
+              onPlaybackStateChange={(isPlaying) => {
+                if (!isPlaying) {
+                  setIsMuted(true);
+                } else {
+                  setIsMuted(false);
+                }
+              }}
+            />
           </View>
           <View style={[styles.progress, { backgroundColor: currentTheme.colors.gray[50] }]}>
             <Text style={[styles.progressText, { color: currentTheme.colors.gray[500] }]}>
@@ -148,13 +141,7 @@ export default function PracticeScreen() {
         <View style={styles.content}>
           <PracticeCard 
             phrase={currentPhrase}
-            onSoundLoaded={setSound}
             autoPlay={!isMuted}
-            onNavigate={() => {
-              if (sound) {
-                sound.stopAsync();
-              }
-            }}
           />
         </View>
 
@@ -222,20 +209,14 @@ const styles = StyleSheet.create({
   headerLeft: {
     width: 40,
   },
-  muteButton: {
-    width: 40,
-    height: 40,
-    borderRadius: theme.borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   progress: {
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
   },
   progressText: {
-    ...theme.typography.caption,
+    fontSize: 13,
+    lineHeight: 16,
   },
   closeButton: {
     width: 40,
@@ -253,12 +234,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: theme.spacing.lg,
-    gap: theme.spacing.md,
+    paddingTop: theme.spacing.md,
   },
   navButton: {
     width: 48,
     height: 48,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -269,10 +250,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.xl,
+    padding: theme.spacing.lg,
   },
   emptyStateText: {
-    ...theme.typography.body1,
+    fontSize: 16,
+    lineHeight: 24,
     textAlign: 'center',
   },
 });

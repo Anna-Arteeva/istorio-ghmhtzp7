@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet } from 'react-native';
 import { X } from 'lucide-react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 
 interface CloseButtonProps {
   onPress: () => void;
@@ -8,20 +8,28 @@ interface CloseButtonProps {
 }
 
 export function CloseButton({ onPress, size = 40 }: CloseButtonProps) {
+  const currentTheme = useTheme();
+  
   return (
     <Pressable
-      style={[styles.button, { width: size, height: size }]}
+      style={[
+        styles.button,
+        { 
+          width: size, 
+          height: size,
+          backgroundColor: currentTheme.colors.gray[50],
+          borderRadius: theme.borderRadius.md,
+        }
+      ]}
       onPress={onPress}
     >
-      <X size={24} color={theme.colors.gray[900]} />
+      <X size={24} color={currentTheme.colors.gray[900]} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.gray[50],
     justifyContent: 'center',
     alignItems: 'center',
   },

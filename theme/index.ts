@@ -196,8 +196,8 @@ const darkColors = {
     800: 'rgba(0, 0, 0, 0.8)',
     900: 'rgba(0, 0, 0, 0.9)',
   },
-  white: '#1A1B30', // Dark mode background
-  pageBackground: '#13141F',
+  white: '#1A1B28', // Dark mode background
+  pageBackground: '#1A1B28',
 } as const;
 
 // Create the themes by combining base theme with colors

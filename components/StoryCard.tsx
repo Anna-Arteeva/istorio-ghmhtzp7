@@ -210,7 +210,7 @@ export function StoryCard({
           )}
         </View>
         <View style={styles.keywordActions}>
-          {audioUrl && <AudioPlayer size={36} url={audioUrl} />}
+          {audioUrl && <AudioPlayer size="small" url={audioUrl} />}
         </View>
       </View>
     );
@@ -221,7 +221,7 @@ export function StoryCard({
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           {!hideAudio && story.audioUrl && (
-            <AudioPlayer url={story.audioUrl} size={48} variant="primary" />
+            <AudioPlayer url={story.audioUrl} size="medium" variant="primary" />
           )}
         </View>
       </View>
@@ -438,7 +438,8 @@ const styles = StyleSheet.create({
     color: theme.colors.gray[800],
   },
   keywordTranslation: {
-    ...theme.typography.body2,
+    fontSize: 13,
+    lineHeight: 16,
     color: theme.colors.gray[500],
     marginTop: 2,
   },
@@ -471,7 +472,8 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   explanationText: {
-    ...theme.typography.body1,
+    fontSize: 16,
+    lineHeight: 24,
     color: theme.colors.gray[600],
   },
 });

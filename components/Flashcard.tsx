@@ -8,12 +8,11 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabase';
 import { CloseButton } from '@/components/CloseButton';
 import { AudioPlayer } from '@/components/AudioPlayer';
-import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { StoryCard } from '@/components/StoryCard';
 
 interface Story {
@@ -42,36 +41,18 @@ interface FlashcardProps {
 }
 
 export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
+  const currentTheme = useTheme();
   const { targetLanguage, nativeLanguage } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [associatedStories, setAssociatedStories] = useState<Story[]>([]);
   const [keywords, setKeywords] = useState<Record<string, any>>({});
-  const { play, stop, isPlaying, isLoading, error } = useAudioPlayer(keyword?.audioUrl);
 
   useEffect(() => {
     setMounted(true);
     return () => {
       setMounted(false);
-      stop(); // Stop audio when component unmounts
     };
   }, []);
-
-  // Handle audio when keyword changes
-  useEffect(() => {
-    if (mounted) {
-      stop(); // Stop previous audio
-      if (visible && keyword?.audioUrl) {
-        play();
-      }
-    }
-  }, [keyword?.audioUrl, visible, mounted]);
-
-  // Handle visibility changes
-  useEffect(() => {
-    if (!visible) {
-      stop(); // Stop audio when modal closes
-    }
-  }, [visible]);
 
   useEffect(() => {
     if (visible && mounted && keyword?.id) {
@@ -137,7 +118,7 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
   if (!keyword) return null;
 
   const modalContent = (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: currentTheme.colors.white }]}>
       <View style={styles.header}>
         <CloseButton onPress={onClose} size={40} />
       </View>
@@ -147,18 +128,22 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.keywordContainer}>
+        <View style={[styles.keywordContainer, { backgroundColor: currentTheme.colors.gray[50] }]}>
           {keyword?.audioUrl && (
             <AudioPlayer 
               url={keyword.audioUrl} 
-              size={48} 
-              variant="primary" 
+              size="medium" 
+              variant="primary"
             />
           )}
           
           <View style={styles.keywordContent}>
-            <Text style={styles.keywordText}>{keyword?.targetText}</Text>
-            <Text style={styles.translationText}>{keyword?.nativeText}</Text>
+            <Text style={[styles.keywordText, { color: currentTheme.colors.gray[900] }]}>
+              {keyword?.targetText}
+            </Text>
+            <Text style={[styles.translationText, { color: currentTheme.colors.gray[500] }]}>
+              {keyword?.nativeText}
+            </Text>
           </View>
         </View>
 
@@ -169,7 +154,7 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
                 <View key={story.id} style={styles.storyCard}>
                   <StoryCard
                     story={story}
-                    keywords={{}}  // Pass empty object to hide keywords section
+                    keywords={keywords}
                     hideImage={false}
                     hideAudio={false}
                   />
@@ -178,8 +163,6 @@ export function Flashcard({ keyword, visible, onClose }: FlashcardProps) {
             </View>
           </View>
         )}
-
-        {error && <Text style={styles.errorText}>{error}</Text>}
       </ScrollView>
     </View>
   );
@@ -212,7 +195,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
     ...Platform.select({
       web: {
         maxWidth: 640,
@@ -241,47 +223,31 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.gray[50],
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: 96,
-    paddingBottom: 48,
-    gap: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
+    gap: theme.spacing.md,
   },
   keywordContent: {
-    flex: 1,
     alignItems: 'center',
-    gap: theme.spacing.sm,
-    textAlign: 'center',
+    gap: theme.spacing.xs,
   },
   keywordText: {
-    ...theme.typography.heading1,
-    color: theme.colors.gray[900],
-    marginBottom: theme.spacing.xs,
+    fontSize: 24,
+    fontWeight: '700',
     textAlign: 'center',
   },
   translationText: {
-    ...theme.typography.body1,
-    color: theme.colors.gray[500],
+    fontSize: 18,
     textAlign: 'center',
   },
   storiesSection: {
     padding: theme.spacing.lg,
   },
-  storiesTitle: {
-    ...theme.typography.bodyBold,
-    color: theme.colors.gray[500],
-    marginBottom: theme.spacing.md,
-  },
   storiesList: {
     gap: theme.spacing.md,
   },
   storyCard: {
-    marginBottom: theme.spacing.md,
-  },
-  errorText: {
-    ...theme.typography.body2,
-    color: theme.colors.error[500],
-    marginBottom: theme.spacing.md,
-    textAlign: 'center',
+    borderRadius: theme.borderRadius.md,
+    overflow: 'hidden',
   },
 });

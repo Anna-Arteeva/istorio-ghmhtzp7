@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: theme.spacing.xl,
   },
   loadingContainer: {
     flex: 1,
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
   },
   loadingMore: {
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
     alignItems: 'center',
   },
   list: {

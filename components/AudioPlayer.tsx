@@ -1,12 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { Play, Pause } from 'lucide-react-native';
-import { theme } from '@/theme';
+import { theme, useTheme } from '@/theme';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 
 interface AudioPlayerProps {
   url?: string;
-  size?: number;
+  size?: 'small' | 'medium' | 'large' | number;
   variant?: 'primary' | 'secondary';
   onPlaybackStatusUpdate?: (status: any) => void;
   onPlaybackStateChange?: (isPlaying: boolean) => void;
@@ -14,11 +14,12 @@ interface AudioPlayerProps {
 
 export function AudioPlayer({ 
   url, 
-  size = 36,
+  size = 'small',
   variant = 'secondary',
   onPlaybackStatusUpdate,
   onPlaybackStateChange,
 }: AudioPlayerProps) {
+  const currentTheme = useTheme();
   const { play, isPlaying, isLoading, error } = useAudioPlayer(url, {
     onPlaybackStatusUpdate,
     onPlaybackStateChange,
@@ -26,38 +27,56 @@ export function AudioPlayer({
 
   if (!url) return null;
 
+  // Handle both predefined sizes and custom numbers
+  const buttonSize = typeof size === 'string' 
+    ? {
+        small: 36,
+        medium: 48,
+        large: 56,
+      }[size]
+    : size;
+
+  const buttonStyle = [
+    styles.button,
+    size === 'small' && styles.smallButton,
+    size === 'medium' && styles.mediumButton,
+    variant === 'primary' && [
+      { backgroundColor: currentTheme.colors.primary[500] },
+      styles.primaryButton,
+    ],
+    variant === 'secondary' && [
+      { backgroundColor: currentTheme.colors.gray[50] },
+      styles.secondaryButton,
+    ],
+    error && styles.errorButton,
+  ];
+
+  const iconColor = variant === 'primary' 
+    ? theme.colors.white 
+    : currentTheme.colors.gray[500];
+
+  const iconSize = size === 'small' ? 20 : size === 'medium' ? 24 : 28;
+
   return (
     <Pressable
-      style={[
-        styles.button,
-        { width: size, height: size },
-        variant === 'primary' && styles.primaryButton,
-        isPlaying && styles.activeButton,
-        error && styles.errorButton,
-      ]}
+      style={buttonStyle}
       onPress={play}
       disabled={isLoading}
     >
       {isLoading ? (
         <ActivityIndicator 
-          size={size * 0.6} 
-          color={variant === 'primary' ? theme.colors.white : theme.colors.gray[500]} 
+          size={iconSize} 
+          color={iconColor} 
         />
       ) : isPlaying ? (
         <Pause 
-          size={size * 0.6} 
-          color={variant === 'primary' ? theme.colors.white : theme.colors.semiWhite[800]} 
+          size={iconSize} 
+          color={iconColor} 
         />
       ) : (
         <Play
-          size={size * 0.6}
-          color={
-            error
-              ? theme.colors.error[500]
-              : variant === 'primary'
-              ? theme.colors.white
-              : theme.colors.gray[800]
-          }
+          size={iconSize}
+          color={iconColor}
         />
       )}
     </Pressable>
@@ -72,12 +91,23 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray[50],
   },
   primaryButton: {
-    backgroundColor: theme.colors.primary[500],
-  },
-  activeButton: {
     backgroundColor: theme.colors.gray[900],
+  },
+  secondaryButton: {
+    backgroundColor: theme.colors.gray[50],
   },
   errorButton: {
     backgroundColor: theme.colors.error[50],
+  },
+  smallButton: {
+    width: 36,
+    height: 36,
+  },
+  mediumButton: {
+    width: 48,
+    height: 48,
+  },
+  disabledButton: {
+    backgroundColor: theme.colors.gray[200],
   },
 });

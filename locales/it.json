@@ -64,6 +64,12 @@
         "title": "Promemoria Giornaliero",
         "value": "Attivo - 9:00"
       },
+      "theme": {
+        "title": "Tema",
+        "system": "Automatico",
+        "dark": "Scuro",
+        "light": "Chiaro"
+      },
       "autoplay": {
         "title": "Riproduzione Automatica",
         "value": "Disattivato"

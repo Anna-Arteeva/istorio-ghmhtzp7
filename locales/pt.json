@@ -64,6 +64,12 @@
         "title": "Lembrete Diário",
         "value": "Ligado - 9:00"
       },
+      "theme": {
+        "title": "Tema",
+        "system": "Automático",
+        "dark": "Escuro",
+        "light": "Claro"
+      },
       "autoplay": {
         "title": "Reprodução Automática",
         "value": "Desligado"

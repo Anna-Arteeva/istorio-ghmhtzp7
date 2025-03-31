@@ -81,7 +81,11 @@ export function KeywordsCarousel({ keywords, selectedKeywords, onKeywordPress }:
               </Pressable>
               <View style={styles.actions}>
                 {audioUrl && (
-                  <AudioPlayer url={audioUrl} size={36} />
+                  <AudioPlayer 
+                    url={audioUrl} 
+                    size="small"
+                    variant="secondary"
+                  />
                 )}
                 <Pressable
                   style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}

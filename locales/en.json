@@ -66,6 +66,12 @@
         "on": "Yes",
         "off": "No"
       },
+      "theme": {
+        "title": "Theme",
+        "system": "Auto",
+        "dark": "Dark",
+        "light": "Light"
+      },
       "reminder": {
         "title": "Daily Reminder",
         "value": "On - 9:00 AM"

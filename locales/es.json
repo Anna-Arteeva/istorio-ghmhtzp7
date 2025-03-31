@@ -64,6 +64,12 @@
         "title": "Recordatorio Diario",
         "value": "Activado - 9:00 AM"
       },
+      "theme": {
+        "title": "Tema",
+        "system": "Automático",
+        "dark": "Oscuro",
+        "light": "Claro"
+      },
       "autoplay": {
         "title": "Reproducción Automática",
         "value": "Desactivado"

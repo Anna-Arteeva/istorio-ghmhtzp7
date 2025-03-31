@@ -64,6 +64,12 @@
         "title": "Tägliche Erinnerung",
         "value": "An - 9:00 Uhr"
       },
+      "theme": {
+        "title": "Design",
+        "system": "Automatisch",
+        "dark": "Dunkel",
+        "light": "Hell"
+      },
       "autoplay": {
         "title": "Audio Autoplay",
         "value": "Aus"

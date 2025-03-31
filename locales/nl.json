@@ -64,6 +64,12 @@
         "title": "Dagelijkse Herinnering",
         "value": "Aan - 9:00"
       },
+      "theme": {
+        "title": "Thema",
+        "system": "Automatisch",
+        "dark": "Donker",
+        "light": "Licht"
+      },
       "autoplay": {
         "title": "Automatisch Afspelen",
         "value": "Uit"

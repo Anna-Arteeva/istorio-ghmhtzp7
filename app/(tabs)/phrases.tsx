@@ -95,7 +95,11 @@ export default function PhrasesScreen() {
       </View>
       <View style={styles.actions}>
         {item.audioUrl && (
-          <AudioPlayer url={item.audioUrl} />
+          <AudioPlayer 
+            url={item.audioUrl} 
+            size="small"
+            variant="secondary"
+          />
         )}
         <Pressable
           style={[styles.actionButton, { backgroundColor: currentTheme.colors.gray[50] }]}

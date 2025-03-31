@@ -64,6 +64,12 @@
         "title": "Rappel Quotidien",
         "value": "Activé - 9h00"
       },
+      "theme": {
+        "title": "Thème",
+        "system": "Automatique",
+        "dark": "Sombre",
+        "light": "Clair"
+      },
       "autoplay": {
         "title": "Lecture Automatique",
         "value": "Désactivé"
