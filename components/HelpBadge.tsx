@@ -32,8 +32,8 @@ export function HelpBadge({
   if (!isVisible) return null;
 
   const badgeContent = (
-    <View style={[styles.badge, styles[type], { }]}>
-      <Text style={[styles.text, { backgroundColor: currentTheme.colors.primary[500], color: currentTheme.colors.white }]}>{text}</Text>
+    <View style={[styles.badge, styles[type], { backgroundColor: currentTheme.colors.primary[500] }]}>
+      <Text style={[styles.text, { color: currentTheme.colors.white }]}>{text}</Text>
       {variant === 'floating' && (
         <Pressable 
           style={styles.closeButton}
@@ -57,7 +57,7 @@ export function HelpBadge({
   }
 
   return (
-    <View style={[styles.container, position, { backgroundColor: currentTheme.colors.primary[500] }]}>
+    <View style={[styles.container, position]}>
       {badgeContent}
     </View>
   );
@@ -82,13 +82,12 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     paddingLeft: theme.spacing.sm,
     paddingRight: theme.spacing.sm,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.spacing.lg,
   },
   text: {
    fontFamily: 'Montserrat-SemiBold',
    fontSize: 13,
    lineHeight: 16,
-   borderRadius: theme.borderRadius.lg,
   },
   closeButton: {
     width: 20,
