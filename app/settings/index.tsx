@@ -100,7 +100,7 @@ export default function SettingsScreen() {
       </View>
 
       <View style={[styles.section, { 
-        backgroundColor: currentTheme.colors.white,
+        backgroundColor: currentTheme.colors.cardBackground,
         borderColor: currentTheme.colors.gray[200],
       }]}>
         <SettingsItem
@@ -123,7 +123,7 @@ export default function SettingsScreen() {
       </View>
 
       <View style={[styles.section, { 
-        backgroundColor: currentTheme.colors.white,
+        backgroundColor: currentTheme.colors.cardBackground,
         borderColor: currentTheme.colors.gray[200],
       }]}>
         <SettingsItem

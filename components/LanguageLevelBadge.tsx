@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
   badgeContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.gray[100],
     borderRadius: theme.borderRadius.md,
     paddingVertical: 0,
     paddingLeft: 8,

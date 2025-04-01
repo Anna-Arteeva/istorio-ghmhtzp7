@@ -14,7 +14,7 @@ export default function TabLayout() {
   const currentTheme = useTheme();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: currentTheme.colors.pageBackground }}>
       <SafeAreaView style={{ backgroundColor: currentTheme.colors.pageBackground }}>
         <View style={{ height: Platform.OS === 'ios' ? 0 : 20 }} />
       </SafeAreaView>
@@ -22,7 +22,7 @@ export default function TabLayout() {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: currentTheme.colors.pageBackground,
-            borderTopColor: currentTheme.colors.gray[200],
+            borderTopColor: currentTheme.colors.pageBackground,
           },
           tabBarActiveTintColor: currentTheme.colors.primary[500],
           tabBarInactiveTintColor: currentTheme.colors.gray[500],
