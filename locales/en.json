@@ -60,6 +60,9 @@
       "select": "Select language",
       "hint": "Please select your {type}"
     },
+    "level": {
+      "title": "Level"
+    },
     "app": {
       "translations": {
         "title": "Show translations by default",

@@ -53,6 +53,9 @@
       "language": "Impostazioni Lingua",
       "app": "Impostazioni App"
     },
+    "level": {
+      "title": "Livello"
+    },
     "language": {
       "native": "Lingua Madre",
       "target": "Lingua di Studio",

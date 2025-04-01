@@ -59,6 +59,9 @@
       "select": "Sprache auswählen",
       "hint": "Bitte wähle deine {type} aus"
     },
+    "level": {
+      "title": "Niveau"
+    },
     "app": {
       "reminder": {
         "title": "Tägliche Erinnerung",

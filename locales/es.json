@@ -59,6 +59,9 @@
       "select": "Seleccionar idioma",
       "hint": "Por favor selecciona tu {type}"
     },
+    "level": {
+      "title": "Nivel"
+    },
     "app": {
       "reminder": {
         "title": "Recordatorio Diario",

@@ -6,7 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { nativeLanguageLabels } from '@/lib/languageLabels';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import * as Icons from '@/components/CustomIcons';
+import { LanguageIcon } from '@/components/LanguageIcon';
 
 interface Language {
   id: string;
@@ -95,9 +95,10 @@ export function LanguageSelectionScreen({
           style={styles.optionsScroll}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.optionsContainer}>
+          <View style={[styles.optionsContainer, { 
+                      borderColor: currentTheme.colors.gray[200],
+                    }]}>
             {filteredLanguages.map((language) => {
-              const IconComponent = (Icons as any)[language.code.toLowerCase()];
               const isSelected = language.code === selectedCode;
 
               return (
@@ -106,7 +107,6 @@ export function LanguageSelectionScreen({
                   style={[
                     styles.optionButton,
                     { 
-                      backgroundColor: currentTheme.colors.white,
                       borderColor: currentTheme.colors.gray[200],
                     },
                     isSelected && { 
@@ -117,11 +117,16 @@ export function LanguageSelectionScreen({
                   onPress={() => onSelect(language.code)}
                 >
                   <View style={styles.optionContent}>
-                    {IconComponent && (
-                      <View style={[styles.iconContainer, { backgroundColor: currentTheme.colors.gray[100] }]}>
-                        <IconComponent size={24} color={currentTheme.colors.gray[800]} />
-                      </View>
-                    )}
+                    <View style={[styles.iconContainer]}>
+                      <LanguageIcon 
+                        language={language.code} 
+                        size={18} 
+                        color={isSelected 
+                          ? currentTheme.colors.primary[500] 
+                          : currentTheme.colors.gray[800]
+                        } 
+                      />
+                    </View>
                     <View style={styles.optionTextContent}>
                       <Text
                         style={[
@@ -183,7 +188,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   optionsContainer: {
-    paddingBottom: theme.spacing.xl,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    overflow: 'hidden',
   },
   optionButton: {
     flexDirection: 'row',
@@ -191,22 +198,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.md,
-    borderRadius: theme.borderRadius.lg,
-    marginBottom: theme.spacing.sm,
-    borderWidth: 1,
+    borderBottomWidth: 1,
   },
   optionContent: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: theme.spacing.md,
+    gap: theme.spacing.sm,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: theme.borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   optionTextContent: {
     flex: 1,

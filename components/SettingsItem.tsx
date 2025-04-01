@@ -1,74 +1,70 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, useTheme } from '@/theme';
-import * as Icons from '@/components/CustomIcons';
+import { ChevronRight, ChevronsUpDown } from 'lucide-react-native';
+import { LanguageIcon } from '@/components/LanguageIcon';
 
 interface SettingsItemProps {
   label: string;
   value?: string;
+  description?: string;
   icon?: string;
   onPress?: () => void;
-  showArrow?: boolean;
-  selected?: boolean;
-  description?: string;
+  showUpDownChevron?: boolean;
 }
 
-export function SettingsItem({
-  label,
-  value,
+export function SettingsItem({ 
+  label, 
+  value, 
+  description,
   icon,
   onPress,
-  showArrow = true,
-  selected = false,
-  description,
+  showUpDownChevron = false
 }: SettingsItemProps) {
-  const IconComponent = icon ? (Icons as any)[icon] : null;
   const currentTheme = useTheme();
 
   return (
-    <Pressable
-      style={({ pressed }) => [
+    <Pressable 
+      style={[
         styles.container,
-        { 
-          backgroundColor: currentTheme.colors.white,
-          borderBottomColor: currentTheme.colors.gray[100],
-        },
-        pressed && { backgroundColor: currentTheme.colors.gray[50] }
+        { borderBottomColor: currentTheme.colors.gray[200] }
       ]}
       onPress={onPress}
     >
       <View style={styles.content}>
-        {IconComponent && (
-          <View style={[styles.iconContainer, { backgroundColor: currentTheme.colors.gray[100] }]}>
-            <IconComponent size={24} color={currentTheme.colors.gray[800]} />
+        <View style={styles.leftContent}>
+          <View style={styles.textContainer}>
+            <Text style={[styles.label, { color: currentTheme.colors.gray[500] }]}>
+              {label}
+            </Text>
+            {description && (
+              <Text style={[styles.description, { color: currentTheme.colors.gray[500] }]}>
+                {description}
+              </Text>
+            )}
           </View>
-        )}
-        <View style={styles.textContainer}>
-          <Text style={[
-            styles.label,
-            { color: currentTheme.colors.gray[900] },
-            selected && styles.labelSelected
-          ]}>
-            {label}
-          </Text>
-          {description && (
-            <Text style={[styles.description, { color: currentTheme.colors.gray[500] }]}>
-              {description}
+        </View>
+        <View style={styles.rightContent}>
+          {icon && (
+            <View style={styles.iconContainer}>
+              <LanguageIcon 
+                language={icon} 
+                size={16} 
+                color={currentTheme.colors.gray[900]} 
+              />
+            </View>
+          )}
+          {value && (
+            <Text style={[styles.value, { color: currentTheme.colors.gray[900] }]}>
+              {value}
             </Text>
           )}
+          {showUpDownChevron ? (
+            <ChevronsUpDown size={20} color={currentTheme.colors.gray[400]} />
+          ) : (
+            <ChevronRight size={20} color={currentTheme.colors.gray[400]} />
+          )}
         </View>
-      </View>
-      <View style={styles.right}>
-        {value && (
-          <Text style={[
-            styles.value,
-            { color: currentTheme.colors.gray[900] },
-            selected && styles.valueSelected
-          ]}>
-            {value}
-          </Text>
-        )}
-        {showArrow && <ChevronRight size={22} color={currentTheme.colors.gray[400]} />}
       </View>
     </Pressable>
   );
@@ -76,48 +72,38 @@ export function SettingsItem({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-    marginHorizontal: 24,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
     borderBottomWidth: 1,
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  leftContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
-    gap: theme.spacing.md,
+  },
+  iconContainer: {
   },
   textContainer: {
     flex: 1,
   },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: theme.borderRadius.md,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   label: {
-    ...theme.typography.body1,
+    ...theme.typography.bodyLead,
   },
   description: {
     ...theme.typography.body2,
     marginTop: 2,
   },
-  labelSelected: {
-    fontFamily: 'Montserrat-SemiBold',
-  },
-  right: {
+  rightContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   value: {
-    ...theme.typography.body1,
-  },
-  valueSelected: {
-    fontFamily: 'Montserrat-SemiBold',
+    ...theme.typography.bodyLead,
   },
 });

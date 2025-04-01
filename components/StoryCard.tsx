@@ -291,41 +291,31 @@ export function StoryCard({
 
   const cardStyle = Platform.select({
     ios: {
-      ...styles.card,
-      shadowColor: currentTheme.colors.gray[900],
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      ...theme.shadows.lg,
-      borderColor: currentTheme.colors.gray[200],
+      ...styles.container,
+      borderColor: theme.colors.gray[100],
       borderWidth: 1,
     },
     android: {
-      ...styles.card,
-      elevation: 4,
+      ...styles.container,
+      borderColor: theme.colors.gray[100],
+      borderWidth: 1,
     },
     default: {
-      ...styles.card,
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+      ...styles.container,
+      borderColor: theme.colors.gray[100],
+      borderWidth: 1,
     },
   });
 
   const shortCardStyle = Platform.select({
     ios: {
-      ...styles.shortCard,
-      shadowColor: currentTheme.colors.gray[900],
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      ...theme.shadows.lg,
+      ...styles.container,
     },
     android: {
-      ...styles.shortCard,
-      elevation: 4,
+      ...styles.container,
     },
     default: {
-      ...styles.shortCard,
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+      ...styles.container,
     },
   });
 
@@ -365,15 +355,11 @@ export function StoryCard({
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderRadius: theme.borderRadius.xl,
+  container: {
+    borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
-    marginBottom: theme.spacing.md,
-  },
-  shortCard: {
-    borderRadius: theme.borderRadius.xl,
-    overflow: 'hidden',
-    marginBottom: theme.spacing.sm,
+    marginBottom: 16,
+    ...theme.shadows.lg,
   },
   content: {},
   header: {

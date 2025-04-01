@@ -59,6 +59,9 @@
       "select": "Selecteer taal",
       "hint": "Selecteer je {type}"
     },
+    "level": {
+      "title": "Niveau"
+    },
     "app": {
       "reminder": {
         "title": "Dagelijkse Herinnering",

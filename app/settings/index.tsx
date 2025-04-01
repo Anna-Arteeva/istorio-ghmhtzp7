@@ -116,7 +116,7 @@ export default function SettingsScreen() {
           onPress={() => router.push('/settings/language?type=target')}
         />
         <SettingsItem
-          label={t('onboarding.level.title')}
+          label={t('settings.level.title')}
           value={level}
           onPress={() => router.push('/settings/level')}
         />
@@ -130,11 +130,13 @@ export default function SettingsScreen() {
           label={t('settings.app.theme.title')}
           value={getThemeLabel(themePreference)}
           onPress={cycleTheme}
+          showUpDownChevron={true}
         />
         <SettingsItem
           label={t('settings.app.translations.title')}
           value={showTranslationsByDefault ? t('settings.app.translations.on') : t('settings.app.translations.off')}
           onPress={toggleTranslations}
+          showUpDownChevron={true}
         />
         <SettingsItem
           label={t('settings.app.onboarding.title')}

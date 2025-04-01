@@ -53,7 +53,9 @@ export function LevelSelectionScreen({
           style={styles.optionsScroll}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.optionsContainer}>
+          <View style={[styles.optionsContainer, { 
+                      borderColor: currentTheme.colors.gray[200],
+                    }]}>
             {LEVELS.map((level) => {
               const levelConfig = LANGUAGE_LEVELS[level];
               const isSelected = level === selectedLevel;
@@ -64,7 +66,6 @@ export function LevelSelectionScreen({
                   style={[
                     styles.optionButton,
                     { 
-                      backgroundColor: currentTheme.colors.white,
                       borderColor: currentTheme.colors.gray[200],
                     },
                     isSelected && { 
@@ -139,6 +140,9 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     paddingBottom: theme.spacing.xl,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    overflow: 'hidden',
   },
   optionButton: {
     flexDirection: 'row',
@@ -146,9 +150,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.md,
-    borderRadius: theme.borderRadius.lg,
-    marginBottom: theme.spacing.sm,
-    borderWidth: 1,
+    borderBottomWidth: 1,
   },
   optionContent: {
     flex: 1,

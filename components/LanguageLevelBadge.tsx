@@ -1,7 +1,8 @@
+import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { theme, useTheme } from '@/theme';
-import * as Icons from '@/components/CustomIcons';
+import { LanguageIcon } from '@/components/LanguageIcon';
 import { LANGUAGE_LEVELS, type LanguageLevel } from '@/lib/constants';
 
 interface LanguageLevelBadgeProps {
@@ -17,19 +18,20 @@ export function LanguageLevelBadge({
 }: LanguageLevelBadgeProps) {
   const currentTheme = useTheme();
   const router = useRouter();
-  const IconComponent = (Icons as any)[language.toLowerCase()];
   const levelConfig = LANGUAGE_LEVELS[level];
 
   return (
     <View style={[styles.header, { backgroundColor: currentTheme.colors.pageBackground }]}>
       <Pressable style={styles.badge} onPress={() => router.push('/settings')}>
         <View style={[styles.badgeContent, { backgroundColor: currentTheme.colors.gray[100] }]}>
-          {IconComponent && (
-            <View style={styles.iconContainer}>
-              <IconComponent size={16} color={currentTheme.colors.gray[800]} />
-            </View>
-          )}
-          <Text style={[styles.language, { color: currentTheme.colors.gray[800] }]}>
+          <View style={styles.iconContainer}>
+            <LanguageIcon 
+              language={language} 
+              size={16} 
+              color={currentTheme.colors.gray[900]} 
+            />
+          </View>
+          <Text style={[styles.language, { color: currentTheme.colors.gray[900] }]}>
             {language.toUpperCase()}
           </Text>
           <View
@@ -74,10 +76,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   iconContainer: {
-    width: 24,
-    height: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: 2,
   },
   language: {
     ...theme.typography.caption,
