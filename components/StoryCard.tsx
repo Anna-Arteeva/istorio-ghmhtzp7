@@ -393,8 +393,8 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
   },
   actionButton: {
-    width: 36,
-    height: 36,
+    width: theme.spacing.xl, // 36px
+    height: theme.spacing.xl, // 36px
     borderRadius: theme.borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
@@ -423,9 +423,8 @@ const styles = StyleSheet.create({
     ...theme.typography.body2,
   },
   keywordTranslation: {
-    fontSize: 13,
-    lineHeight: 16,
-    marginTop: 2,
+    ...theme.typography.body3,
+    marginTop: theme.spacing.xs / 2, // 2px
   },
   keywordActions: {
     marginLeft: theme.spacing.sm,
@@ -443,8 +442,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray[900],
   },
   decoderButtonText: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 13,
+    ...theme.typography.body3,
   },
   decoderButtonTextActive: {
     color: theme.colors.white,

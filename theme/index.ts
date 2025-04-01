@@ -20,9 +20,9 @@ const baseTheme = {
       fontFamily: 'Montserrat-Regular',
     },
     bodyShortStory: {
-      fontSize: 16,
-      lineHeight: 24,
-      fontFamily: 'Montserrat-Regular',
+      fontSize: 24,
+      lineHeight: 32,
+      fontFamily: 'Montserrat-ExtraBold',
     },
     body1: {
       fontSize: 16,

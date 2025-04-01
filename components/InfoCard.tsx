@@ -8,6 +8,7 @@ import { TranslatableSentence } from '@/components/TranslatableSentence';
 import { LANGUAGE_LEVELS } from '@/lib/constants';
 import { useViews } from '@/contexts/ViewContext';
 import { useSettings } from '@/contexts/SettingsContext';
+import { LanguageIcon } from '@/components/LanguageIcon';
 
 interface InfoCardContent {
   title: string;
@@ -65,29 +66,29 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
     >
       <View style={styles.content}>
         {isCultureCard && (
-          <View style={styles.header}>
-            <View style={[styles.cultureBadge, { backgroundColor: currentTheme.colors.semiWhite[700] }]}>
+          
+            <View style={[styles.cultureBadge, { backgroundColor: currentTheme.colors.gray[900] }]}>
               <View style={styles.languageCode}>
-                <Text style={[styles.languageText, { color: currentTheme.colors.gray[900] }]}>
+                <View style={styles.iconContainer}>
+                  <LanguageIcon
+                    language={targetLanguage}
+                    size={16}
+                    color={currentTheme.colors.white}
+                  />
+                </View>
+                <Text style={[styles.languageText, { color: currentTheme.colors.white }]}>
                   {targetLanguage.toUpperCase()}
                 </Text>
               </View>
-              <View style={[
-                styles.levelBadge,
-                { backgroundColor: levelConfig.color }
-              ]}>
-                <Text style={[
-                  styles.levelText,
-                  { color: levelConfig.textColor }
-                ]}>
-                  {level}
-                </Text>
-              </View>
+              <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
+                |
+              </Text>
+
+              <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
+                Culture club
+              </Text>
             </View>
-            <Text style={[styles.brandText, { color: currentTheme.colors.white }]}>
-              Istorio
-            </Text>
-          </View>
+          
         )}
         
         {isTipCard && (
@@ -155,10 +156,11 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.xl,
     overflow: 'visible',
     marginBottom: theme.spacing.xl,
-    marginTop: theme.spacing.md,
+    marginTop: theme.spacing.xl,
   },
   content: {
-    padding: theme.spacing.lg,
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
   },
   header: {
     flexDirection: 'row',
@@ -169,12 +171,24 @@ const styles = StyleSheet.create({
   cultureBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
+    gap: theme.spacing.sm,
+
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    borderBottomRightRadius: theme.borderRadius.lg,
+    position: 'absolute',
+    top: -12,
+    left: 0,
   },
   languageCode: {
-    paddingHorizontal: theme.spacing.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 2,
+    gap: theme.spacing.xs,
+  },
+  iconContainer: {
+    marginRight: 2,
   },
   languageText: {
     ...theme.typography.caption,
@@ -235,15 +249,12 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   descriptionContainer: {
-    marginBottom: theme.spacing.md,
   },
   description: {
     ...theme.typography.bodyLead,
-    marginBottom: theme.spacing.sm,
   },
   descriptionTranslation: {
     ...theme.typography.body2,
-    marginBottom: theme.spacing.md,
   },
   cultureDescription: {
     color: theme.colors.white,

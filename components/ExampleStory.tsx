@@ -112,11 +112,18 @@ export function ExampleStory() {
           position={{ top: 50, right: 16 }}
         />
       
-        {/* Learn phrases badge - Bottom Left */}
+        {/* Learn phrases badge - Bottom Left 
         <HelpBadge 
           text={t('example.phrases')}
           type="bottomRight"
           position={{ bottom: 142, left: -8 }}
+        />      */}
+
+        {/* Learn phrases badge - Bottom Left */}
+        <HelpBadge 
+          text={t('example.storyDecoder')}
+          type="bottomLeft"
+          position={{ bottom: 142, right: -8 }}
         />
         
         {/* Save for practice badge - Bottom Right 
