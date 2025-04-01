@@ -420,9 +420,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   keywordText: {
-    fontFamily: 'Montserrat-Medium',
-    fontSize: 14,
-    lineHeight: 15,
+    ...theme.typography.body2,
   },
   keywordTranslation: {
     fontSize: 13,
@@ -456,8 +454,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   explanationText: {
-    fontSize: 16,
-    lineHeight: 24,
+    ...theme.typography.body2,
   },
 });
 

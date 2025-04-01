@@ -78,7 +78,6 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
       setError(null);
     } catch (error) {
       console.error('Stop error:', error);
-      setError('Failed to stop audio');
     }
   };
 
@@ -110,7 +109,8 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
           setError(null);
         });
         
-        audio.addEventListener('error', () => {
+        audio.addEventListener('error', (e) => {
+          console.error('Web audio error:', e);
           setError('Failed to load audio');
           updatePlaybackState(false);
           setCurrentSound(null);
@@ -153,6 +153,9 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
                 setCurrentSound(null);
                 setError(null);
               }
+            } else if (status.error) {
+              console.error('Audio status error:', status.error);
+              setError('Failed to play audio');
             }
           }
         );

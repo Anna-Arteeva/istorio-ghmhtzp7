@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray[50],
   },
   errorButton: {
-    backgroundColor: theme.colors.error[50],
+    backgroundColor: theme.colors.gray[900],
   },
   smallButton: {
     width: 36,

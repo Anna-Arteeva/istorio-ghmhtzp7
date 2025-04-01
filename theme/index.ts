@@ -3,6 +3,13 @@ import { useSettings } from '../contexts/SettingsContext';
 
 // Base theme values that don't change between light and dark modes
 const baseTheme = {
+  fontFamily: {
+    default: 'Montserrat-Regular',
+    medium: 'Montserrat-Medium',
+    semiBold: 'Montserrat-SemiBold',
+    bold: 'Montserrat-Bold',
+    extraBold: 'Montserrat-ExtraBold',
+  },
   shadows: {
     sm: Platform.select({
       ios: {
@@ -58,42 +65,47 @@ const baseTheme = {
   },
   typography: {
     heading1: {
-      fontFamily: 'Montserrat-ExtraBold',
+      fontFamily: baseTheme.fontFamily.extraBold,
       fontSize: 26,
       lineHeight: 32,
     },
     heading2: {
-      fontFamily: 'Montserrat-ExtraBold',
+      fontFamily: baseTheme.fontFamily.extraBold,
       fontSize: 20,
       lineHeight: 28,
     },
     bodyLead: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: baseTheme.fontFamily.default,
       fontSize: 18,
       lineHeight: 28,
     },
     bodyShortStory: {
-      fontFamily: 'Montserrat-ExtraBold',
+      fontFamily: baseTheme.fontFamily.extraBold,
       fontSize: 24,
       lineHeight: 32,
     },
     body1: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: baseTheme.fontFamily.default,
       fontSize: 16,
       lineHeight: 24,
     },
     bodyBold: {
-      fontFamily: 'Montserrat-SemiBold',
+      fontFamily: baseTheme.fontFamily.semiBold,
       fontSize: 16,
       lineHeight: 24,
     },
     body2: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: baseTheme.fontFamily.default,
       fontSize: 14,
       lineHeight: 20,
     },
+    body3: {
+      fontFamily: baseTheme.fontFamily.default,
+      fontSize: 13,
+      lineHeight: 16,
+    },
     caption: {
-      fontFamily: 'Montserrat-Medium',
+      fontFamily: baseTheme.fontFamily.medium,
       fontSize: 12,
       lineHeight: 16,
     },
