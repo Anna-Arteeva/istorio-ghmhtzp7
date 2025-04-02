@@ -13,12 +13,10 @@ module.exports = {
       bundleIdentifier: 'com.istorio',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
-      },
-      buildNumber: '1'
+      }
     },
     android: {
-      package: "com.istorio",
-      versionCode: 1
+      package: "com.istorio"
     },
     plugins: [
       'expo-router',
