@@ -7,6 +7,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { theme, useTheme } from '@/theme';
 import { LanguageSelectionScreen } from '@/components/shared/LanguageSelectionScreen';
 import { LevelSelectionScreen } from '@/components/shared/LevelSelectionScreen';
+import { getDeviceLanguage, isLanguageSupported } from '@/utils/languageUtils';
+import { Localization } from 'expo-localization';
 
 type Step = 'native' | 'target' | 'level';
 
@@ -23,6 +25,10 @@ export default function OnboardingScreen() {
   } = useLanguage();
   const { level, setLevel } = useLevel();
   const [currentStep, setCurrentStep] = useState<Step>('native');
+
+  const deviceLang = getDeviceLanguage();
+  const defaultNative = isLanguageSupported(deviceLang) ? deviceLang : 'en';
+  const defaultTarget = defaultNative === 'en' ? 'fr' : 'en';
 
   const handleNext = async () => {
     if (currentStep === 'native') {
@@ -129,3 +135,18 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
 });
+
+function getDeviceLanguage(): string {
+  try {
+    if (Platform.OS === 'web') {
+      const browserLang = navigator.language || (navigator as any).userLanguage;
+      return browserLang.slice(0, 2).toLowerCase();
+    }
+    // Get the device locale using expo-localization
+    const locale = Localization.locale;
+    return locale.split('-')[0].toLowerCase();
+  } catch (error) {
+    console.error('Error detecting device language:', error);
+    return 'en';
+  }
+}

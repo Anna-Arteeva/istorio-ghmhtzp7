@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     paddingLeft: theme.spacing.sm,
     paddingRight: theme.spacing.sm,
-    borderRadius: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
   },
   text: {
    fontFamily: 'Montserrat-SemiBold',

@@ -175,6 +175,7 @@ const lightColors = {
   primary: {
     50:  'rgba(18, 177, 198, 0.2)', // very light green
     100: 'rgba(104, 212, 249, 1)', // light green
+    400: 'rgba(25, 214, 240, 1)', // dark gray
     500: 'rgba(18, 177, 198, 1)', // dark gray
     600: 'rgba(18, 177, 198, 1)',
     700: 'rgba(0, 72, 85, 1)',
@@ -235,6 +236,7 @@ const darkColors = {
   primary: {
     50:  'rgba(18, 177, 198, 0.2)', // very light green
     100: 'rgba(104, 212, 249, 1)', // light green
+    400: 'rgba(10, 158, 179, 1)', // dark gray
     500: 'rgba(18, 177, 198, 1)', // dark gray
     600: 'rgba(18, 177, 198, 1)',
     700: 'rgba(0, 72, 85, 1)',

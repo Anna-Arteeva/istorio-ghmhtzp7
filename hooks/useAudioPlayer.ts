@@ -231,7 +231,12 @@ export function useAudioPlayer(url?: string, options: AudioPlayerOptions = {}) {
           throw error;
         }
       } else {
-        await (audioToPlay as Audio.Sound).playFromPositionAsync(0);
+        // Get the current position before playing
+        const status = await (audioToPlay as Audio.Sound).getStatusAsync();
+        const position = status.isLoaded ? status.positionMillis : 0;
+        
+        // Play from the current position
+        await (audioToPlay as Audio.Sound).playFromPositionAsync(position);
         updatePlaybackState(true);
         setCurrentSound(audioToPlay);
         setError(null);

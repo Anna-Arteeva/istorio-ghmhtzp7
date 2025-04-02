@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import * as Localization from 'expo-localization';
 
 interface LanguageContextType {
   nativeLanguage: string;
@@ -27,7 +28,9 @@ function getDeviceLanguage(): string {
       const browserLang = navigator.language || (navigator as any).userLanguage;
       return browserLang.slice(0, 2).toLowerCase();
     }
-    return 'en';
+    // Get the device locale using expo-localization
+    const locale = Localization.locale;
+    return locale.split('-')[0].toLowerCase();
   } catch (error) {
     console.error('Error detecting device language:', error);
     return 'en';
