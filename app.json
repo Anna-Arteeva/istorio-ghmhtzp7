@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "Expo App",
-    "slug": "expo-app",
+    "name": "Istorio",
+    "slug": "istorio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "rgba(29, 29, 34, 1)"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/android-monochrome.png",
         "backgroundColor": "#FFFFFF"
       }
     },
