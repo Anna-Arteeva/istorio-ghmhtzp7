@@ -4,9 +4,9 @@
     "slug": "istorio",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/images/icon.png",
     "splash": {
-      "image": "./assets/icon-splash.png",
+      "image": "./assets/images/icon-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "rgba(29, 29, 34, 1)"
     },
@@ -18,17 +18,20 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.istorio"
+      "bundleIdentifier": "com.istorio",
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/android-monochrome.png",
+        "foregroundImage": "./assets/images/android-monochrome.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.istorio"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/favicon.png"
     }
   },
   "dependencies": {

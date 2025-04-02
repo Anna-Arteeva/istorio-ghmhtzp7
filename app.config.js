@@ -5,7 +5,8 @@ export default {
     version: '1.0.0',
     owner: 'annaart',
     orientation: 'portrait',
-    icon: './assets/icon.png',
+    icon: './assets/images/icon.png',
+    scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     ios: {
       supportsTablet: true,
@@ -13,9 +14,14 @@ export default {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
       },
-    android : {
-        package: "com.istorio"
+      icon: {
+        light: './assets/images/icon.png',
+        dark: './assets/images/icon-dark.png',
+        tinted: './assets/images/icon-tinted.png',
       }
+    },
+    android: {
+      package: "com.istorio"
     },
     plugins: [
       'expo-router',
