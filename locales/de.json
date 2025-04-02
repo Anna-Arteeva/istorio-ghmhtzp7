@@ -80,7 +80,14 @@
       "onboarding": {
         "title": "Einführung",
         "value": "Einführung neu starten"
+      },
+      "translations": {
+        "title": "Übersetzungen standardmäßig anzeigen"
       }
     }
+  },
+  "phrases": {
+    "empty": "Noch keine gespeicherten Sätze. Fügen Sie Sätze aus den Geschichten hinzu!",
+    "noPhrasesToPractice": "Keine Sätze zum Üben. Fügen Sie zuerst Sätze aus den Geschichten hinzu!"
   }
 }

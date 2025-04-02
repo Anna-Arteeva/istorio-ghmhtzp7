@@ -359,7 +359,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     marginBottom: 16,
-    ...theme.shadows.lg,
   },
   content: {},
   header: {

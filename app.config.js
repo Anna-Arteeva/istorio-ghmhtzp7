@@ -21,20 +21,22 @@ export default {
         tinted: './assets/images/icon-tinted.png',
       },
     },
-    web: {
-      bundler: 'metro',
-      output: 'single',
-      favicon: './assets/images/favicon.png',
-    },
     android: {
+      package: 'com.istorio',
       adaptiveIcon: {
         foregroundImage: './assets/images/android-icon.png',
         backgroundColor: '#1A1B30',
         monochromeImage: './assets/images/android-monochrome.png',
       },
     },
+    web: {
+      bundler: 'metro',
+      output: 'single',
+      favicon: './assets/images/favicon.png',
+    },
     plugins: [
       'expo-router',
+      'expo-localization',
       [
         'expo-splash-screen',
         {

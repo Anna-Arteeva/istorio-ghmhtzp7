@@ -27,7 +27,7 @@ export function LanguageLevelBadge({
           <View style={styles.iconContainer}>
             <LanguageIcon 
               language={language} 
-              size={16} 
+              size={14} 
               color={currentTheme.colors.gray[900]} 
             />
           </View>

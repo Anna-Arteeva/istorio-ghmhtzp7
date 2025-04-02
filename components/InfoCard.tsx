@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, useTheme } from '@/theme';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useLevel } from '@/contexts/LevelContext';
 import { ExampleStory } from '@/components/ExampleStory';
 import { TranslatableSentence } from '@/components/TranslatableSentence';
-import { LANGUAGE_LEVELS } from '@/lib/constants';
 import { useViews } from '@/contexts/ViewContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import { LanguageIcon } from '@/components/LanguageIcon';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface InfoCardContent {
   title: string;
@@ -20,7 +20,6 @@ interface InfoCard {
   id: string;
   name: string;
   type?: 'progress' | 'culture' | 'tip';
-  active_days: number;
   content_json: Record<string, InfoCardContent>;
 }
 
@@ -29,14 +28,12 @@ interface InfoCardProps {
   onPress?: () => void;
 }
 
-const ADVANCED_LEVELS = ['B2', 'C1', 'C2'];
-
 export function InfoCard({ card, onPress }: InfoCardProps) {
   const currentTheme = useTheme();
   const { nativeLanguage, targetLanguage } = useLanguage();
   const { recordView } = useViews();
-  const { level } = useLevel();
   const { showTranslationsByDefault } = useSettings();
+  const { t } = useTranslation();
   
   // Record view when the card is rendered
   useEffect(() => {
@@ -52,7 +49,6 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
   const isCultureCard = card.type === 'culture';
   const isTipCard = card.type === 'tip';
   const isProgressCard = !card.type || card.type === 'progress';
-  const levelConfig = LANGUAGE_LEVELS[level];
 
   return (
     <Pressable 
@@ -66,35 +62,32 @@ export function InfoCard({ card, onPress }: InfoCardProps) {
     >
       <View style={styles.content}>
         {isCultureCard && (
-          
-            <View style={[styles.cultureBadge, { backgroundColor: currentTheme.colors.gray[900] }]}>
-              <View style={styles.languageCode}>
-                <View style={styles.iconContainer}>
-                  <LanguageIcon
-                    language={targetLanguage}
-                    size={16}
-                    color={currentTheme.colors.white}
-                  />
-                </View>
-                <Text style={[styles.languageText, { color: currentTheme.colors.white }]}>
-                  {targetLanguage.toUpperCase()}
-                </Text>
+          <View style={[styles.cultureBadge, { backgroundColor: currentTheme.colors.gray[900] }]}>
+            <View style={styles.languageCode}>
+              <View style={styles.iconContainer}>
+                <LanguageIcon
+                  language={targetLanguage}
+                  size={13}
+                  color={currentTheme.colors.white}
+                />
               </View>
-              <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
-                |
-              </Text>
-
-              <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
-                Culture club
+              <Text style={[styles.languageText, { color: currentTheme.colors.white }]}>
+                {targetLanguage.toUpperCase()}
               </Text>
             </View>
-          
+            <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
+              |
+            </Text>
+            <Text style={[styles.cultureBadgeText, { color: currentTheme.colors.white }]}>
+              {t('infoCard.cultureClub')}
+            </Text>
+          </View>
         )}
         
         {isTipCard && (
           <View style={[styles.tipBadge, { backgroundColor: currentTheme.colors.primary[500] }]}>
             <Text style={[styles.tipBadgeText, { color: currentTheme.colors.white }]}>
-              Pro Tip
+              {t('infoCard.proTip')}
             </Text>
           </View>
         )}
@@ -162,19 +155,12 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xl,
     paddingHorizontal: theme.spacing.lg,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-  },
   cultureBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'hidden',
     gap: theme.spacing.sm,
-
-    paddingHorizontal: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderBottomRightRadius: theme.borderRadius.lg,
     position: 'absolute',
@@ -194,16 +180,9 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
     fontFamily: 'Montserrat-SemiBold',
   },
-  levelBadge: {
-    paddingHorizontal: theme.spacing.sm,
-    paddingVertical: theme.spacing.xs,
-  },
-  levelText: {
+  cultureBadgeText: {
     ...theme.typography.caption,
     fontFamily: 'Montserrat-SemiBold',
-  },
-  brandText: {
-    fontFamily: 'Montserrat-ExtraBold',
   },
   tipBadge: {
     paddingHorizontal: theme.spacing.md,
@@ -239,16 +218,15 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.sm,
   },
   titleContainer: {
-    gap: theme.spacing.xs,
   },
   title: {
     ...theme.typography.heading1,
   },
   nativeTitle: {
     ...theme.typography.body1,
-    marginBottom: theme.spacing.md,
   },
   descriptionContainer: {
+    marginTop: theme.spacing.md,
   },
   description: {
     ...theme.typography.bodyLead,

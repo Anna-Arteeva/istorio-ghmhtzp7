@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
@@ -12,7 +12,6 @@ import {
   Montserrat_900Black,
 } from '@expo-google-fonts/montserrat';
 import { LanguageProvider } from '@/contexts/LanguageContext';
-import { SavedPhrasesProvider } from '@/contexts/SavedPhrasesContext';
 import { LevelProvider } from '@/contexts/LevelContext';
 import { AudioProvider } from '@/contexts/AudioContext';
 import { VisitProvider } from '@/contexts/VisitContext';
@@ -20,6 +19,9 @@ import { ViewProvider } from '@/contexts/ViewContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { useSettings } from '@/contexts/SettingsContext';
 import * as SplashScreen from 'expo-splash-screen';
+import { useColorScheme, View } from 'react-native';
+import { SavedPhrasesProvider } from '@/contexts/SavedPhrasesContext';
+import { theme } from '@/theme';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -39,8 +41,11 @@ function AppContent() {
 }
 
 export default function RootLayout() {
-  useFrameworkReady();
+  const colorScheme = useColorScheme();
+  const [appIsReady, setAppIsReady] = useState(false);
 
+  useFrameworkReady();
+  
   const [fontsLoaded] = useFonts({
     'Montserrat-Regular': Montserrat_400Regular,
     'Montserrat-Medium': Montserrat_500Medium,
@@ -51,31 +56,50 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    // Hide splash screen once fonts are loaded
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        await Promise.all([
+          // Add any additional async operations here
+          new Promise(resolve => setTimeout(resolve, 1000)), // Minimum splash screen time
+        ]);
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
     }
-  }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady || !fontsLoaded) {
     return null;
   }
 
   return (
-    <AudioProvider>
-      <LanguageProvider>
-        <LevelProvider>
-          <SavedPhrasesProvider>
-            <VisitProvider>
-              <ViewProvider>
-                <SettingsProvider>
-                  <AppContent />
-                </SettingsProvider>
-              </ViewProvider>
-            </VisitProvider>
-          </SavedPhrasesProvider>
-        </LevelProvider>
-      </LanguageProvider>
-    </AudioProvider>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <AudioProvider>
+        <LanguageProvider>
+          <LevelProvider>
+            <SavedPhrasesProvider>
+              <VisitProvider>
+                <ViewProvider>
+                  <SettingsProvider>
+                    <AppContent />
+                  </SettingsProvider>
+                </ViewProvider>
+              </VisitProvider>
+            </SavedPhrasesProvider>
+          </LevelProvider>
+        </LanguageProvider>
+      </AudioProvider>
+    </View>
   );
 }

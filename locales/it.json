@@ -7,15 +7,33 @@
       "index": "Storie"
     }
   },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português",
+    "ru": "Русский",
+    "ua": "Українська",
+    "nl": "Nederlands",
+    "ja": "日本語",
+    "ko": "한국어",
+    "zh": "中文"
+  },
   "common": {
     "close": "Chiudi",
     "translate": "Traduci",
     "storyDecoder": "Il senso della battuta"
   },
+  "infoCard": {
+    "cultureClub": "Club culturale",
+    "proTip": "Consiglio pro"
+  },
   "example": {
   "firstStory": "Ecco la tua prima storia",
-  "play": "Ascolta l’audio della storia",
-  "translateStory": "Traduci l’intera storia",
+  "play": "Ascolta l'audio della storia",
+  "translateStory": "Traduci l'intera storia",
   "translate": "Traduci una frase",
   "storyDecoder": "Capisci storia e cultura",
   "phrases": "Impara le frasi chiave",
@@ -80,7 +98,14 @@
       "onboarding": {
         "title": "Configurazione Iniziale",
         "value": "Riavvia configurazione"
+      },
+      "translations": {
+        "title": "Mostra traduzioni di default"
       }
     }
+  },
+  "phrases": {
+    "empty": "Nessuna frase salvata. Aggiungi delle frasi dalle storie!",
+    "noPhrasesToPractice": "Nessuna frase da praticare. Aggiungi prima delle frasi dalle storie!"
   }
 }

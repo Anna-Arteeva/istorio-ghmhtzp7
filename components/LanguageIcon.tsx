@@ -19,7 +19,7 @@ const languageIcons: { [key: string]: React.ComponentType<any> } = {
   ua: Ua,
 };
 
-export function LanguageIcon({ language, size = 24, color }: LanguageIconProps) {
+export function LanguageIcon({ language, size = 18, color }: LanguageIconProps) {
   const IconComponent = languageIcons[language.toLowerCase()];
   
   if (!IconComponent) {

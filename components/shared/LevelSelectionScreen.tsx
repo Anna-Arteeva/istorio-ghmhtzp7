@@ -4,6 +4,7 @@ import { theme, useTheme } from '@/theme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LANGUAGE_LEVELS, type LanguageLevel } from '@/lib/constants';
+import { useLanguageName } from '@/hooks/useLanguageName';
 
 interface LevelSelectionScreenProps {
   onSelect: (level: LanguageLevel) => void;
@@ -24,7 +25,8 @@ export function LevelSelectionScreen({
 }: LevelSelectionScreenProps) {
   const currentTheme = useTheme();
   const { t } = useTranslation();
-  const { targetLanguage, nativeLanguage } = useLanguage();
+  const { targetLanguage } = useLanguage();
+  const languageName = useLanguageName(targetLanguage);
 
   return (
     <View style={[styles.container, { backgroundColor: currentTheme.colors.white }]}>
@@ -45,7 +47,7 @@ export function LevelSelectionScreen({
         </Text>
         <Text style={[styles.subtitle, { color: currentTheme.colors.gray[500] }]}>
           {t('onboarding.level.subtitle', { 
-            language: targetLanguage.toUpperCase()
+            language: languageName
           })}
         </Text>
 

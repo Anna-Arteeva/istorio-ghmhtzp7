@@ -12,6 +12,10 @@
     "translate": "Vertalen",
     "storyDecoder": "Grap ontrafeld"
   },
+  "infoCard": {
+    "cultureClub": "Cultuurclub",
+    "proTip": "Pro tip"
+  },
   "example": {
   "firstStory": "Hier is je eerste verhaal",
   "play": "Verhaal audio afspelen",
@@ -80,7 +84,14 @@
       "onboarding": {
         "title": "Startconfiguratie",
         "value": "Configuratie herstarten"
+      },
+      "translations": {
+        "title": "Vertalingen standaard tonen"
       }
     }
+  },
+  "phrases": {
+    "empty": "Nog geen opgeslagen zinnen. Voeg zinnen toe uit verhalen!",
+    "noPhrasesToPractice": "Geen zinnen om te oefenen. Voeg eerst zinnen toe uit verhalen!"
   }
 }

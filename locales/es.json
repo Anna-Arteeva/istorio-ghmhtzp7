@@ -80,7 +80,14 @@
       "onboarding": {
         "title": "Configuración Inicial",
         "value": "Reiniciar configuración"
+      },
+      "translations": {
+        "title": "Mostrar traducciones por defecto"
       }
     }
+  },
+  "phrases": {
+    "empty": "Aún no hay frases guardadas. ¡Añade frases desde las historias!",
+    "noPhrasesToPractice": "No hay frases para practicar. ¡Añade primero frases desde las historias!"
   }
 }

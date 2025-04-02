@@ -7,6 +7,7 @@ import { Flashcard } from '@/components/Flashcard';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabase';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Keyword {
   keyword_id: string;
@@ -33,6 +34,7 @@ export default function PhrasesScreen() {
   const [isFlashcardVisible, setIsFlashcardVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [phrasesWithTranslations, setPhrasesWithTranslations] = useState<PhraseWithTranslations[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -125,7 +127,7 @@ export default function PhrasesScreen() {
         ListEmptyComponent={
           <View style={styles.emptyState}>
             <Text style={[styles.emptyStateText, { color: currentTheme.colors.gray[500] }]}>
-              No saved phrases yet. Add some phrases from stories!
+              {t('phrases.empty')}
             </Text>
           </View>
         }
@@ -159,7 +161,6 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
     flexDirection: 'row',
     alignItems: 'center',
-    ...theme.shadows.lg,
     gap: theme.spacing.md,
   },
   phraseContent: {
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyStateText: {
-    ...theme.typography.body1,
+    ...theme.typography.bodyLead,
     textAlign: 'center',
   },
 });

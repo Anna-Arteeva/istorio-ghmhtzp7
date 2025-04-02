@@ -7,17 +7,35 @@
       "index": "Histoires"
     }
   },
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "pt": "Português",
+    "ru": "Русский",
+    "ua": "Українська",
+    "nl": "Nederlands",
+    "ja": "日本語",
+    "ko": "한국어",
+    "zh": "中文"
+  },
   "common": {
     "close": "Fermer",
     "translate": "Traduire",
     "storyDecoder": "Pourquoi c'est drôle ?"
   },
+  "infoCard": {
+    "cultureClub": "Club culture",
+    "proTip": "Conseil pro"
+  },
   "example": {
   "firstStory": "Voici ta première histoire",
-  "play": "Écouter l’audio de l’histoire",
-  "translateStory": "Traduire toute l’histoire",
+  "play": "Écouter l'audio de l'histoire",
+  "translateStory": "Traduire toute l'histoire",
   "translate": "Traduire une phrase",
-  "storyDecoder": "Comprendre l’histoire et la culture",
+  "storyDecoder": "Comprendre l'histoire et la culture",
   "phrases": "Apprendre les phrases clés",
   "save": "Enregistrer pour réviser plus tard",
     "try": "À toi de jouer !"
@@ -80,7 +98,14 @@
       "onboarding": {
         "title": "Configuration Initiale",
         "value": "Redémarrer la configuration"
+      },
+      "translations": {
+        "title": "Afficher les traductions par défaut"
       }
     }
+  },
+  "phrases": {
+    "empty": "Aucune phrase sauvegardée. Ajoutez des phrases depuis les histoires !",
+    "noPhrasesToPractice": "Aucune phrase à pratiquer. Ajoutez d'abord des phrases depuis les histoires !"
   }
 }

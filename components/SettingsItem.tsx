@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    ...theme.typography.bodyLead,
+    ...theme.typography.body1,
   },
   description: {
     ...theme.typography.body2,
@@ -104,6 +104,6 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
   },
   value: {
-    ...theme.typography.bodyLead,
+    ...theme.typography.body1,
   },
 });

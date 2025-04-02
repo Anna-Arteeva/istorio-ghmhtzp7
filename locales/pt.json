@@ -12,6 +12,10 @@
     "translate": "Traduzir",
     "storyDecoder": "Por que é engraçado?"
   },
+  "infoCard": {
+    "cultureClub": "Clube cultural",
+    "proTip": "Dica pro"
+  },
   "example": {
   "firstStory": "Aqui está sua primeira história",
   "play": "Reproduzir áudio da história",
@@ -80,7 +84,14 @@
       "onboarding": {
         "title": "Configuração Inicial",
         "value": "Reiniciar configuração"
+      },
+      "translations": {
+        "title": "Mostrar traduções por padrão"
       }
     }
+  },
+  "phrases": {
+    "empty": "Nenhuma frase salva ainda. Adicione frases das histórias!",
+    "noPhrasesToPractice": "Nenhuma frase para praticar. Adicione primeiro frases das histórias!"
   }
 }

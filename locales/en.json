@@ -13,6 +13,10 @@
     "translate": "Translate",
     "storyDecoder": "Humor Decoder"
   },
+  "infoCard": {
+    "cultureClub": "Culture club",
+    "proTip": "Pro Tip"
+  },
   "example": {
     "firstStory": "Here is your first story",
     "play": "Play story audio",
@@ -88,5 +92,9 @@
         "value": "Restart onboarding"
       }
     }
+  },
+  "phrases": {
+    "empty": "No saved phrases yet. Add some phrases from stories!",
+    "noPhrasesToPractice": "No saved phrases to practice. Add some phrases from stories first!"
   }
 }

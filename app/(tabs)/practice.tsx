@@ -8,6 +8,7 @@ import { PracticeCard } from '@/components/PracticeCard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/lib/supabase';
 import { AudioPlayer } from '@/components/AudioPlayer';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface PhraseWithTranslations {
   id: string;
@@ -28,6 +29,7 @@ export default function PracticeScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [phrasesWithTranslations, setPhrasesWithTranslations] = useState<PhraseWithTranslations[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -97,7 +99,7 @@ export default function PracticeScreen() {
         </View>
         <View style={styles.emptyState}>
           <Text style={[styles.emptyStateText, { color: currentTheme.colors.gray[500] }]}>
-            No saved phrases to practice.{'\n'}Add some phrases from stories first!
+          {t('phrases.noPhrasesToPractice')}
           </Text>
         </View>
       </View>
@@ -239,8 +241,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
   },
   emptyStateText: {
-    fontSize: 16,
-    lineHeight: 24,
+    ...theme.typography.bodyLead,
     textAlign: 'center',
   },
 });
