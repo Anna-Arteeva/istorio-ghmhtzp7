@@ -5,17 +5,17 @@ export default {
     version: '1.0.0',
     owner: 'annaart',
     orientation: 'portrait',
-    icon: './assets/images/icon.png',
+    icon: './assets/icon.png',
     userInterfaceStyle: 'automatic',
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.istorio',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
+      },
+    android : {
+        package: "com.istorio"
       }
-    },
-    android: {
-      package: 'com.istorio'
     },
     plugins: [
       'expo-router',
