@@ -13,11 +13,6 @@ export default {
       bundleIdentifier: 'com.istorio',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
-      },
-      icon: {
-        light: './assets/images/icon.png',
-        dark: './assets/images/icon-dark.png',
-        tinted: './assets/images/icon-tinted.png',
       }
     },
     android: {
