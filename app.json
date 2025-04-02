@@ -17,13 +17,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.istorio"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/android-monochrome.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.istorio"
     },
     "web": {
       "favicon": "./assets/favicon.png"
