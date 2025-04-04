@@ -10,11 +10,6 @@ module.exports = {
     icon: './assets/images/icon.png',
     scheme: 'istorio',
     userInterfaceStyle: 'light',
-    splash: {
-      image: './assets/images/splash.png',
-      resizeMode: 'contain',
-      backgroundColor: '#ffffff'
-    },
     assetBundlePatterns: [
       "**/*"
     ],
@@ -23,14 +18,6 @@ module.exports = {
       bundleIdentifier: 'com.istorio',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
-      },
-      splash: {
-        image: './assets/images/splash.png',
-        backgroundColor: '#ffffff',
-        resizeMode: 'contain',
-        tabletImage: null,
-        tabletBackgroundColor: '#ffffff',
-        tabletResizeMode: 'contain'
       }
     },
     android: {

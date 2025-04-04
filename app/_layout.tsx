@@ -59,7 +59,6 @@ export default function RootLayout() {
         // Pre-load fonts, make any API calls you need to do here
         await Promise.all([
           // Add any additional async operations here
-          new Promise(resolve => setTimeout(resolve, 1000)), // Minimum splash screen time
         ]);
       } catch (e) {
         console.warn(e);
