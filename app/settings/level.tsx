@@ -1,6 +1,8 @@
+import React from 'react';
 import { useRouter } from 'expo-router';
 import { useLevel } from '@/contexts/LevelContext';
 import { LevelSelectionScreen } from '@/components/shared/LevelSelectionScreen';
+import { LanguageLevel } from '@/utils/languageUtils';
 
 export default function LevelScreen() {
   const router = useRouter();

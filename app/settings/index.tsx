@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { theme, useTheme } from '@/theme';

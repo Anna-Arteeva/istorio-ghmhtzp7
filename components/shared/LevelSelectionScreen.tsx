@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, Pressable, ScrollView, Platform } from 'react-native';
 import { ChevronLeft } from 'lucide-react-native';
 import { theme, useTheme } from '@/theme';

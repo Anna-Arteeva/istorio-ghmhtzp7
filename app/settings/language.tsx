@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelectionScreen } from '@/components/shared/LanguageSelectionScreen';

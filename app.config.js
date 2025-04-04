@@ -1,3 +1,5 @@
+/* global module */
+
 module.exports = {
   expo: {
     name: 'Istorio',
@@ -9,7 +11,7 @@ module.exports = {
     scheme: 'istorio',
     userInterfaceStyle: 'light',
     splash: {
-      image: null,
+      image: './assets/images/splash.png',
       resizeMode: 'contain',
       backgroundColor: '#ffffff'
     },
@@ -23,7 +25,7 @@ module.exports = {
         ITSAppUsesNonExemptEncryption: false
       },
       splash: {
-        image: null,
+        image: './assets/images/splash.png',
         backgroundColor: '#ffffff',
         resizeMode: 'contain',
         tabletImage: null,

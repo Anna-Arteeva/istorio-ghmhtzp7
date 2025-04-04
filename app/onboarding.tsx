@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';

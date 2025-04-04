@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { useSavedPhrases } from '@/contexts/SavedPhrasesContext';

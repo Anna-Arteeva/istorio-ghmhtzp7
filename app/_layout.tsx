@@ -18,13 +18,11 @@ import { VisitProvider } from '@/contexts/VisitContext';
 import { ViewProvider } from '@/contexts/ViewContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { useSettings } from '@/contexts/SettingsContext';
-import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme, View } from 'react-native';
 import { SavedPhrasesProvider } from '@/contexts/SavedPhrasesContext';
 import { theme } from '@/theme';
 
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
+// Removed import statement for SplashScreen
 
 function AppContent() {
   const { currentTheme } = useSettings();
@@ -75,7 +73,7 @@ export default function RootLayout() {
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      // await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
 

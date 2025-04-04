@@ -1,3 +1,5 @@
+/* global module, require */
+
 module.exports = function (api) {
   api.cache(true);
   return {

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { X } from 'lucide-react-native';
 import { theme, useTheme } from '@/theme';
