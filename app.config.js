@@ -3,20 +3,43 @@ module.exports = {
     name: 'Istorio',
     slug: 'istorio',
     version: '1.0.0',
-    owner: 'annaart',
+    owner: 'aaarteeva',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
-    scheme: 'myapp',
-    userInterfaceStyle: 'automatic',
+    scheme: 'istorio',
+    userInterfaceStyle: 'light',
+    splash: {
+      image: null,
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff'
+    },
+    assetBundlePatterns: [
+      "**/*"
+    ],
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.istorio',
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false
+      },
+      splash: {
+        image: null,
+        backgroundColor: '#ffffff',
+        resizeMode: 'contain',
+        tabletImage: null,
+        tabletBackgroundColor: '#ffffff',
+        tabletResizeMode: 'contain'
       }
     },
     android: {
+      adaptiveIcon: {
+        foregroundImage: './assets/images/adaptive-icon.png',
+        backgroundColor: '#ffffff'
+      },
       package: "com.istorio"
+    },
+    web: {
+      favicon: './assets/images/favicon.png'
     },
     plugins: [
       'expo-router',
@@ -24,7 +47,7 @@ module.exports = {
     ],
     extra: {
       eas: {
-        projectId: '3362b458-6c7d-4764-bb00-caab29f71301'
+        projectId: 'e1d5867a-cc1c-4d08-b300-cb513ebfe472'
       }
     }
   }
